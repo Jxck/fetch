@@ -1,12 +1,24 @@
 /// <reference path="es6-promise.d.ts" />
 
+// http://heycam.github.io/webidl/#idl-ByteString
 type ByteString = string;
+
+// http://heycam.github.io/webidl/#common-BufferSource
 type BufferSource = Object;
+
+// https://url.spec.whatwg.org/#urlsearchparams
 type URLSearchParams = Object;
+
+// http://heycam.github.io/webidl/#idl-USVString
 type USVString = string;
+
+// http://heycam.github.io/webidl/#idl-DOMString
 type DOMString = string;
+
+// see: https://fetch.spec.whatwg.org/#headersinit
 type OpenEndedDictionary = Object;
 
+// https://fetch.spec.whatwg.org/#concept-method
 enum Method {
   OPTIONS,
   GET,
@@ -18,18 +30,21 @@ enum Method {
   CONNECT,
 }
 
+// https://fetch.spec.whatwg.org/#simple-method
 enum SimpleMethod {
   GET,
   HEAD,
   POST
 }
 
+// https://fetch.spec.whatwg.org/#forbidden-method
 enum ForbiddenMethod {
   CONNECT,
   TRACE,
   TRACK
 }
 
+// https://fetch.spec.whatwg.org/#requestcontext
 enum RequestContext {
   "audio",         "beacon",
   "cspreport",     "download",
@@ -50,6 +65,7 @@ enum RequestContext {
   "xslt"
 };
 
+// https://fetch.spec.whatwg.org/#concept-request-context-frame-type
 enum ContextFrameType {
   "auxiliary",
   "top-level",
@@ -57,18 +73,21 @@ enum ContextFrameType {
   "none"
 }
 
+// https://fetch.spec.whatwg.org/#concept-request-mode
 enum RequestMode {
   "same-origin",
   "no-cors",
   "cors"
 };
 
+// https://fetch.spec.whatwg.org/#concept-request-credentials-mode
 enum RequestCredentials {
   "omit",
   "same-origin",
   "include"
 };
 
+// https://fetch.spec.whatwg.org/#concept-request-cache-mode
 enum RequestCache {
   "default",
   "bypass",
@@ -78,6 +97,7 @@ enum RequestCache {
   "offline"
 };
 
+// https://fetch.spec.whatwg.org/#concept-response-type
 enum ResponseType {
   "basic",
   "cors",
@@ -86,6 +106,7 @@ enum ResponseType {
   "opaque"
 };
 
+// https://fetch.spec.whatwg.org/#forbidden-header-name
 enum ForbiddenHeaderName {
   "Accept-Charset",
   "Accept-Encoding",
@@ -114,6 +135,7 @@ function isArray(o: any): boolean {
   return Object.prototype.toString.call(o) === "[object Array]";
 }
 
+// https://fetch.spec.whatwg.org/#forbidden-header-name
 function isForbiddenHeaderName(name: ByteString): boolean {
   if (ForbiddenHeaderName[name] != undefined) {
     return true;
@@ -126,6 +148,7 @@ function isForbiddenHeaderName(name: ByteString): boolean {
   return false;
 }
 
+// https://fetch.spec.whatwg.org/#forbidden-response-header-name
 function isForbiddenResponseHeaderName(name: ByteString): boolean {
   if (["Set-Cookie", "Set-Cookie2"].indexOf(name)) {
     return true;
@@ -133,6 +156,7 @@ function isForbiddenResponseHeaderName(name: ByteString): boolean {
   return false;
 }
 
+// https://fetch.spec.whatwg.org/#simple-header
 function isSimpleHeader(name, value: ByteString): boolean {
   if (["Accept", "Accept-Language", "Content-Language"].indexOf(name)) {
     return true;
@@ -154,9 +178,11 @@ function isForbiddenMethod(method: ByteString): boolean {
   return false
 }
 
+// https://fetch.spec.whatwg.org/#headersinit
 // typedef (Headers or sequence<sequence<ByteString>> or OpenEndedDictionary<ByteString>) HeadersInit;
 type HeadersInit = Headers | ByteString[][] | OpenEndedDictionary;
 
+// https://fetch.spec.whatwg.org/#headers
 interface IHeaders {
   append(name, value: ByteString): void;
   delete(name: ByteString):        void;
@@ -167,6 +193,7 @@ interface IHeaders {
   // iterable<ByteString, ByteString>;
 };
 
+// https://fetch.spec.whatwg.org/#concept-header
 class Header {
   name:  ByteString;
   value: ByteString;
@@ -176,9 +203,12 @@ class Header {
   }
 }
 
+// https://fetch.spec.whatwg.org/#headers
 class Headers implements IHeaders{
   public headerList: Header[];
   public guard: string = 'none';
+
+  // https://fetch.spec.whatwg.org/#dom-headers
   constructor(init?: HeadersInit) {
 
     if (init instanceof Headers) { // Headers
@@ -207,11 +237,14 @@ class Headers implements IHeaders{
     }
   }
 
+  // https://fetch.spec.whatwg.org/#dom-headers-append
   append(name, value: ByteString): void {
+    // step 1
     if (!name || !value) {
       throw new TypeError("invalid name/value");
     }
 
+    // step 2, 3, 4, 5
     switch(this.guard) {
       case "immutable":
         throw new TypeError("operation to immutable headers");
@@ -229,15 +262,19 @@ class Headers implements IHeaders{
         }
     }
 
+    // step 6
     name = name.toLowerCase();
     this.headerList.push(new Header(name, value));
   }
 
+  // https://fetch.spec.whatwg.org/#dom-headers-delete
   delete(name: ByteString): void {
+    // step 1
     if (!name) {
       throw new TypeError("invalid name");
     }
 
+    // step 2, 3, 4, 5
     switch(this.guard) {
       case "immutable":
         throw new TypeError("operation to immutable headers");
@@ -256,17 +293,20 @@ class Headers implements IHeaders{
     }
 
     name = name.toLowerCase();
-
+    // step 6
     this.headerList = this.headerList.filter((header: Header) => {
       return header.name !== name;
     });
   }
 
+  // https://fetch.spec.whatwg.org/#dom-headers-get
   get(name: ByteString) :ByteString {
+    // step 1
     if (!name) {
       throw new TypeError("invalid name");
     }
 
+    // step 2
     var value: ByteString = null;
     this.headerList.forEach((header: Header) => {
       if (header.name === name) {
@@ -278,11 +318,14 @@ class Headers implements IHeaders{
     return value;
   }
 
+  // https://fetch.spec.whatwg.org/#dom-headers-getall
   getAll(name: ByteString) :ByteString[] {
+    // step 1
     if (!name) {
       throw new TypeError("invalid name");
     }
 
+    // step 2
     var result: ByteString[] = this.headerList.reduce((acc: ByteString[], header: Header) => {
       if (header.name === name) {
         acc.push(header.value);
@@ -293,21 +336,27 @@ class Headers implements IHeaders{
     return result;
   }
 
+  // https://fetch.spec.whatwg.org/#dom-headers-has
   has(name: ByteString) :boolean {
+    // step 1
     if (!name) {
       throw new TypeError("invalid name");
     }
 
+    // step 2
     return this.headerList.some((header: Header) => {
       return header.name === name;
     });
   }
 
+  // https://fetch.spec.whatwg.org/#dom-headers-set
   set(name, value: ByteString): void {
+    // step 1
     if (!name || !value) {
       throw new TypeError("invalid name/value");
     }
 
+    // step 2, 3, 4, 5
     switch(this.guard) {
       case "immutable":
         throw new TypeError("operation to immutable headers");
@@ -327,6 +376,7 @@ class Headers implements IHeaders{
 
     name = name.toLowerCase();
 
+    // step 6, and "The value pairs to iterate over are the headers in the header list"
     // get all index of name
     var indexes: number[] = this.headerList.reduce((acc: number[], header: Header, index: number) => {
       if (header.name === name) {
@@ -354,9 +404,12 @@ class Headers implements IHeaders{
   }
 }
 
+// https://fetch.spec.whatwg.org/#json
 type object = JSON;
+// https://fetch.spec.whatwg.org/#bodyinit
 type BodyInit = Blob | BufferSource | FormData | URLSearchParams | USVString
 
+// https://fetch.spec.whatwg.org/#body
 interface IBody {
   // readonly property
   bodyUsed: boolean;
@@ -372,8 +425,10 @@ interface IBody {
   text():        Promise<USVString>;
 };
 
+// https://fetch.spec.whatwg.org/#requestinfo
 type RequestInfo = Request | USVString;
 
+// https://fetch.spec.whatwg.org/#request
 interface IRequest extends IBody {
   // readonly property
   method:      ByteString;
@@ -389,6 +444,7 @@ interface IRequest extends IBody {
   clone():     IRequest;
 };
 
+// https://fetch.spec.whatwg.org/#requestinit
 // dictionary RequestInit
 var RequestInit: {
   method:      ByteString;
@@ -435,27 +491,33 @@ class Request implements IRequest {
   // readonly property on IBody
   private _bodyUsed:    boolean;
 
+  // https://fetch.spec.whatwg.org/#dom-request-method
   get method(): ByteString {
     return this._method;
   }
 
+  // https://fetch.spec.whatwg.org/#dom-request-url
   get url(): USVString {
     return this._url;
   }
 
+  // https://fetch.spec.whatwg.org/#dom-request-headers
   get headers(): Headers {
     return this._headers;
   }
 
+  // https://fetch.spec.whatwg.org/#dom-request-context
   get context(): RequestContext {
     return this._context;
   }
 
+  // https://fetch.spec.whatwg.org/#dom-request-referrer
   get referrer(): DOMString {
     // TODO:
     return null;
   }
 
+  // https://fetch.spec.whatwg.org/#dom-request-mode
   get mode(): ByteString{
     switch(this.mode) {
       case RequestMode[same-origin]:
@@ -470,10 +532,12 @@ class Request implements IRequest {
     return this.mode;
   }
 
+  // https://fetch.spec.whatwg.org/#dom-request-credentials
   get credentials(): RequestCredentials {
     return this._credentials;
   }
 
+  // https://fetch.spec.whatwg.org/#dom-request-cache
   get cache(): RequestCache {
     if (this.cache === "force-offline") {
       return "force-offline";
@@ -481,28 +545,39 @@ class Request implements IRequest {
     return this.cache;
   }
 
+  // https://fetch.spec.whatwg.org/#dom-body-bodyused
   get bodyUsed(): boolean {
     return this.bodyUsed;
   }
 
+  // https://fetch.spec.whatwg.org/#dom-request-clone
   // method on IRequest
   public clone(): IRequest{
     return null;
   }
 
+  // https://fetch.spec.whatwg.org/#dom-body-arraybuffer
   // method on IBody
   public arrayBuffer(): Promise<ArrayBuffer>{
     return null;
   }
+
+  // https://fetch.spec.whatwg.org/#dom-body-blob
   public blob(): Promise<Blob>{
     return null;
   }
+
+  // https://fetch.spec.whatwg.org/#dom-body-formdata
   public formData(): Promise<FormData>{
     return null;
   }
+
+  // https://fetch.spec.whatwg.org/#dom-body-json
   public json(): Promise<JSON>{
     return null;
   }
+
+  // https://fetch.spec.whatwg.org/#dom-body-text
   public text(): Promise<USVString>{
     return null;
   }
@@ -513,19 +588,25 @@ class Request implements IRequest {
   public usedFlag: boolean;
   public mimeType: string;
 
+  // https://fetch.spec.whatwg.org/#dom-request
   constructor(input: RequestInfo, init?: typeof RequestInit) {
     // can't detect class by instanceof
     // if (input instanceof Request) { }
 
     var request: request;
+    // step 1
     if (typeof input === "object" && input.body !== null) { // Request
+      // step 1-1
       if (input.usedFlag) {
         throw new TypeError("Request already used");
       }
+      // step 1-2
       input.usedFlag = true;
 
+      // step 2
       request = input.request;
     } else {
+      // step 2
       // new request otherwise
       request = {
         url: null,
@@ -545,6 +626,7 @@ class Request implements IRequest {
       }
     }
 
+    // step 3
     request = {
       url : request.url,
       method : request.method,
@@ -562,6 +644,7 @@ class Request implements IRequest {
       cacheMode : request.cacheMode
     }
 
+    // step 4, 5, 6
     var fallbackMode = null;
     var fallbackCredentials = null;
     var fallbackCache = null;
@@ -570,30 +653,44 @@ class Request implements IRequest {
     function parseURL(url: string): string {
       return url;
     }
+    // step 7
     if (typeof input === "string") {
+      // step 7-1
       var parsedURL = parseURL(input);
+      // step 7-3
       request.url = parsedURL;
 
+      // step 7-4, 7-5, 7-6
       fallbackMode = "CORS";
       fallbackCredentials = "omit";
       fallbackCache = "default";
     }
 
+    // step 8
     var mode = init.mode? init.mode: fallbackMode;
+    // step 9
     if (mode != null) request.mode = mode;
 
+    // step 10
     var credentials = init.credentials? init.credentials: fallbackCredentials;
+    // step 11
     if (credentials != null) request.credentialsMode = credentials;
 
+    // step 12
     var cache = init.cache? init.cache: fallbackCache;
+    // step 13
     if (cache != null) request.cacheMode = cache;
 
+    // step 14
     if (init.method) {
+      // step 14-1
       var method = init.method;
       if(isForbiddenMethod(method)) {
         throw new TypeError("forbidden method " + method);
       }
+      // step 14-2
       method = method.toUpperCase();
+      // step 14-3
       request.method = method;
     }
 
@@ -619,6 +716,7 @@ class Request implements IRequest {
 }
 
 /**
+// https://fetch.spec.whatwg.org/#response
 // [Constructor(optional BodyInit body, optional ResponseInit init), Exposed=(Window,Worker)]
 interface Response extends Body { // Response implements Body;
   // static Response error();
@@ -631,6 +729,7 @@ interface Response extends Body { // Response implements Body;
   // Response clone();
 };
 
+// https://fetch.spec.whatwg.org/#responseinit
 class ResponseInit {
   status: number = 200;
   statusText: ByteString  = "OK";
@@ -638,6 +737,7 @@ class ResponseInit {
 };
 
 
+// https://fetch.spec.whatwg.org/#globalfetch
 // Window implements GlobalFetch;
 interface Window {
   fetch(input: RequestInfo, init?: RequestInit): Promise<Response>;
