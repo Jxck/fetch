@@ -1,4 +1,5 @@
 /// <reference path="es6-promise.d.ts" />
+// https://fetch.spec.whatwg.org/#concept-method
 var Method;
 (function (Method) {
     Method[Method["OPTIONS"] = 0] = "OPTIONS";
@@ -10,18 +11,21 @@ var Method;
     Method[Method["TRACE"] = 6] = "TRACE";
     Method[Method["CONNECT"] = 7] = "CONNECT";
 })(Method || (Method = {}));
+// https://fetch.spec.whatwg.org/#simple-method
 var SimpleMethod;
 (function (SimpleMethod) {
     SimpleMethod[SimpleMethod["GET"] = 0] = "GET";
     SimpleMethod[SimpleMethod["HEAD"] = 1] = "HEAD";
     SimpleMethod[SimpleMethod["POST"] = 2] = "POST";
 })(SimpleMethod || (SimpleMethod = {}));
+// https://fetch.spec.whatwg.org/#forbidden-method
 var ForbiddenMethod;
 (function (ForbiddenMethod) {
     ForbiddenMethod[ForbiddenMethod["CONNECT"] = 0] = "CONNECT";
     ForbiddenMethod[ForbiddenMethod["TRACE"] = 1] = "TRACE";
     ForbiddenMethod[ForbiddenMethod["TRACK"] = 2] = "TRACK";
 })(ForbiddenMethod || (ForbiddenMethod = {}));
+// https://fetch.spec.whatwg.org/#requestcontext
 var RequestContext;
 (function (RequestContext) {
     RequestContext[RequestContext["audio"] = 0] = "audio";
@@ -59,6 +63,7 @@ var RequestContext;
     RequestContext[RequestContext["xslt"] = 32] = "xslt";
 })(RequestContext || (RequestContext = {}));
 ;
+// https://fetch.spec.whatwg.org/#concept-request-context-frame-type
 var ContextFrameType;
 (function (ContextFrameType) {
     ContextFrameType[ContextFrameType["auxiliary"] = 0] = "auxiliary";
@@ -66,13 +71,15 @@ var ContextFrameType;
     ContextFrameType[ContextFrameType["nested"] = 2] = "nested";
     ContextFrameType[ContextFrameType["none"] = 3] = "none";
 })(ContextFrameType || (ContextFrameType = {}));
-var RequestMode;
-(function (RequestMode) {
-    RequestMode[RequestMode["same-origin"] = 0] = "same-origin";
-    RequestMode[RequestMode["no-cors"] = 1] = "no-cors";
-    RequestMode[RequestMode["cors"] = 2] = "cors";
-})(RequestMode || (RequestMode = {}));
+// https://fetch.spec.whatwg.org/#concept-request-mode
+var RequestModeEnum;
+(function (RequestModeEnum) {
+    RequestModeEnum[RequestModeEnum["same-origin"] = 0] = "same-origin";
+    RequestModeEnum[RequestModeEnum["no-cors"] = 1] = "no-cors";
+    RequestModeEnum[RequestModeEnum["cors"] = 2] = "cors";
+})(RequestModeEnum || (RequestModeEnum = {}));
 ;
+// https://fetch.spec.whatwg.org/#concept-request-credentials-mode
 var RequestCredentials;
 (function (RequestCredentials) {
     RequestCredentials[RequestCredentials["omit"] = 0] = "omit";
@@ -80,6 +87,7 @@ var RequestCredentials;
     RequestCredentials[RequestCredentials["include"] = 2] = "include";
 })(RequestCredentials || (RequestCredentials = {}));
 ;
+// https://fetch.spec.whatwg.org/#concept-request-cache-mode
 var RequestCache;
 (function (RequestCache) {
     RequestCache[RequestCache["default"] = 0] = "default";
@@ -90,6 +98,7 @@ var RequestCache;
     RequestCache[RequestCache["offline"] = 5] = "offline";
 })(RequestCache || (RequestCache = {}));
 ;
+// https://fetch.spec.whatwg.org/#concept-response-type
 var ResponseType;
 (function (ResponseType) {
     ResponseType[ResponseType["basic"] = 0] = "basic";
@@ -99,6 +108,7 @@ var ResponseType;
     ResponseType[ResponseType["opaque"] = 4] = "opaque";
 })(ResponseType || (ResponseType = {}));
 ;
+// https://fetch.spec.whatwg.org/#forbidden-header-name
 var ForbiddenHeaderName;
 (function (ForbiddenHeaderName) {
     ForbiddenHeaderName[ForbiddenHeaderName["Accept-Charset"] = 0] = "Accept-Charset";
@@ -124,9 +134,7 @@ var ForbiddenHeaderName;
     ForbiddenHeaderName[ForbiddenHeaderName["Via"] = 20] = "Via";
 })(ForbiddenHeaderName || (ForbiddenHeaderName = {}));
 ;
-function isArray(o) {
-    return Object.prototype.toString.call(o) === "[object Array]";
-}
+// https://fetch.spec.whatwg.org/#forbidden-header-name
 function isForbiddenHeaderName(name) {
     if (ForbiddenHeaderName[name] != undefined) {
         return true;
@@ -137,12 +145,14 @@ function isForbiddenHeaderName(name) {
     }
     return false;
 }
+// https://fetch.spec.whatwg.org/#forbidden-response-header-name
 function isForbiddenResponseHeaderName(name) {
     if (["Set-Cookie", "Set-Cookie2"].indexOf(name)) {
         return true;
     }
     return false;
 }
+// https://fetch.spec.whatwg.org/#simple-header
 function isSimpleHeader(name, value) {
     if (["Accept", "Accept-Language", "Content-Language"].indexOf(name)) {
         return true;
@@ -161,6 +171,7 @@ function isForbiddenMethod(method) {
     return false;
 }
 ;
+// https://fetch.spec.whatwg.org/#concept-header
 var Header = (function () {
     function Header(name, value) {
         this.name = name;
@@ -168,7 +179,9 @@ var Header = (function () {
     }
     return Header;
 })();
+// https://fetch.spec.whatwg.org/#headers
 var Headers = (function () {
+    // https://fetch.spec.whatwg.org/#dom-headers
     function Headers(init) {
         var _this = this;
         this.guard = 'none';
@@ -179,7 +192,7 @@ var Headers = (function () {
             });
             return;
         }
-        if (isArray(init)) {
+        if (Array.isArray(init)) {
             var headerSequence = init;
             headerSequence.forEach(function (header) {
                 if (header.length === 2) {
@@ -195,7 +208,9 @@ var Headers = (function () {
             });
         }
     }
+    // https://fetch.spec.whatwg.org/#dom-headers-append
     Headers.prototype.append = function (name, value) {
+        // step 1
         if (!name || !value) {
             throw new TypeError("invalid name/value");
         }
@@ -215,10 +230,13 @@ var Headers = (function () {
                     return;
                 }
         }
+        // step 6
         name = name.toLowerCase();
         this.headerList.push(new Header(name, value));
     };
+    // https://fetch.spec.whatwg.org/#dom-headers-delete
     Headers.prototype.delete = function (name) {
+        // step 1
         if (!name) {
             throw new TypeError("invalid name");
         }
@@ -239,14 +257,18 @@ var Headers = (function () {
                 }
         }
         name = name.toLowerCase();
+        // step 6
         this.headerList = this.headerList.filter(function (header) {
             return header.name !== name;
         });
     };
+    // https://fetch.spec.whatwg.org/#dom-headers-get
     Headers.prototype.get = function (name) {
+        // step 1
         if (!name) {
             throw new TypeError("invalid name");
         }
+        // step 2
         var value = null;
         this.headerList.forEach(function (header) {
             if (header.name === name) {
@@ -256,10 +278,13 @@ var Headers = (function () {
         });
         return value;
     };
+    // https://fetch.spec.whatwg.org/#dom-headers-getall
     Headers.prototype.getAll = function (name) {
+        // step 1
         if (!name) {
             throw new TypeError("invalid name");
         }
+        // step 2
         var result = this.headerList.reduce(function (acc, header) {
             if (header.name === name) {
                 acc.push(header.value);
@@ -268,16 +293,21 @@ var Headers = (function () {
         }, []);
         return result;
     };
+    // https://fetch.spec.whatwg.org/#dom-headers-has
     Headers.prototype.has = function (name) {
+        // step 1
         if (!name) {
             throw new TypeError("invalid name");
         }
+        // step 2
         return this.headerList.some(function (header) {
             return header.name === name;
         });
     };
+    // https://fetch.spec.whatwg.org/#dom-headers-set
     Headers.prototype.set = function (name, value) {
         var _this = this;
+        // step 1
         if (!name || !value) {
             throw new TypeError("invalid name/value");
         }
@@ -298,6 +328,7 @@ var Headers = (function () {
                 }
         }
         name = name.toLowerCase();
+        // step 6, and "The value pairs to iterate over are the headers in the header list"
         // get all index of name
         var indexes = this.headerList.reduce(function (acc, header, index) {
             if (header.name === name) {
@@ -328,21 +359,28 @@ var Headers = (function () {
 })();
 ;
 ;
+// https://fetch.spec.whatwg.org/#requestinit
 // dictionary RequestInit
 var RequestInit;
 var Request = (function () {
+    // https://fetch.spec.whatwg.org/#dom-request
     function Request(input, init) {
         // can't detect class by instanceof
         // if (input instanceof Request) { }
         var request;
+        // step 1
         if (typeof input === "object" && input.body !== null) {
+            // step 1-1
             if (input.usedFlag) {
                 throw new TypeError("Request already used");
             }
+            // step 1-2
             input.usedFlag = true;
+            // step 2
             request = input.request;
         }
         else {
+            // step 2
             // new request otherwise
             request = {
                 url: null,
@@ -361,6 +399,7 @@ var Request = (function () {
                 cacheMode: "default"
             };
         }
+        // step 3
         request = {
             url: request.url,
             method: request.method,
@@ -377,6 +416,7 @@ var Request = (function () {
             credentialsMode: request.credentialsMode,
             cacheMode: request.cacheMode
         };
+        // step 4, 5, 6
         var fallbackMode = null;
         var fallbackCredentials = null;
         var fallbackCache = null;
@@ -384,36 +424,57 @@ var Request = (function () {
         function parseURL(url) {
             return url;
         }
+        // step 7
         if (typeof input === "string") {
+            // step 7-1
             var parsedURL = parseURL(input);
+            // step 7-3
             request.url = parsedURL;
+            // step 7-4, 7-5, 7-6
             fallbackMode = "CORS";
             fallbackCredentials = "omit";
             fallbackCache = "default";
         }
+        // step 8
         var mode = init.mode ? init.mode : fallbackMode;
+        // step 9
         if (mode != null)
             request.mode = mode;
+        // step 10
         var credentials = init.credentials ? init.credentials : fallbackCredentials;
+        // step 11
         if (credentials != null)
             request.credentialsMode = credentials;
+        // step 12
         var cache = init.cache ? init.cache : fallbackCache;
+        // step 13
         if (cache != null)
             request.cacheMode = cache;
+        // step 14
         if (init.method) {
+            // step 14-1
             var method = init.method;
             if (isForbiddenMethod(method)) {
                 throw new TypeError("forbidden method " + method);
             }
+            // step 14-2
             method = method.toUpperCase();
+            // step 14-3
             request.method = method;
         }
-        // 15
         this.request = request;
         this._headers = new Headers();
-        var headers = this.request._headers;
+        var headers = this.request.headers;
+        this.request.headers = null;
+        // 19
+        if (this.request.mode === "no-cors") {
+            if (!isSimpleMethod(this.request.method)) {
+                throw new TypeError("not simple method" + method);
+            }
+        }
     }
     Object.defineProperty(Request.prototype, "method", {
+        // https://fetch.spec.whatwg.org/#dom-request-method
         get: function () {
             return this._method;
         },
@@ -421,6 +482,7 @@ var Request = (function () {
         configurable: true
     });
     Object.defineProperty(Request.prototype, "url", {
+        // https://fetch.spec.whatwg.org/#dom-request-url
         get: function () {
             return this._url;
         },
@@ -428,6 +490,7 @@ var Request = (function () {
         configurable: true
     });
     Object.defineProperty(Request.prototype, "headers", {
+        // https://fetch.spec.whatwg.org/#dom-request-headers
         get: function () {
             return this._headers;
         },
@@ -435,6 +498,7 @@ var Request = (function () {
         configurable: true
     });
     Object.defineProperty(Request.prototype, "context", {
+        // https://fetch.spec.whatwg.org/#dom-request-context
         get: function () {
             return this._context;
         },
@@ -442,31 +506,23 @@ var Request = (function () {
         configurable: true
     });
     Object.defineProperty(Request.prototype, "referrer", {
+        // https://fetch.spec.whatwg.org/#dom-request-referrer
         get: function () {
-            // TODO:
             return null;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Request.prototype, "mode", {
+        // https://fetch.spec.whatwg.org/#dom-request-mode
         get: function () {
-            switch (this.mode) {
-                case RequestMode[same - origin]:
-                    return "same-origin";
-                case "no-cors":
-                    return "no-cors";
-                case "cors":
-                    return "cors";
-                case "cors-with-forced-preflight":
-                    return "cors";
-            }
-            return this.mode;
+            return null;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Request.prototype, "credentials", {
+        // https://fetch.spec.whatwg.org/#dom-request-credentials
         get: function () {
             return this._credentials;
         },
@@ -474,41 +530,88 @@ var Request = (function () {
         configurable: true
     });
     Object.defineProperty(Request.prototype, "cache", {
+        // https://fetch.spec.whatwg.org/#dom-request-cache
         get: function () {
-            if (this.cache === "force-offline") {
-                return "force-offline";
-            }
-            return this.cache;
+            return null;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Request.prototype, "bodyUsed", {
+        // https://fetch.spec.whatwg.org/#dom-body-bodyused
         get: function () {
             return this.bodyUsed;
         },
         enumerable: true,
         configurable: true
     });
+    // https://fetch.spec.whatwg.org/#dom-request-clone
     // method on IRequest
     Request.prototype.clone = function () {
         return null;
     };
+    // https://fetch.spec.whatwg.org/#dom-body-arraybuffer
     // method on IBody
     Request.prototype.arrayBuffer = function () {
         return null;
     };
+    // https://fetch.spec.whatwg.org/#dom-body-blob
     Request.prototype.blob = function () {
         return null;
     };
+    // https://fetch.spec.whatwg.org/#dom-body-formdata
     Request.prototype.formData = function () {
         return null;
     };
+    // https://fetch.spec.whatwg.org/#dom-body-json
     Request.prototype.json = function () {
         return null;
     };
+    // https://fetch.spec.whatwg.org/#dom-body-text
     Request.prototype.text = function () {
         return null;
     };
     return Request;
 })();
+/**
+// https://fetch.spec.whatwg.org/#response
+// [Constructor(optional BodyInit body, optional ResponseInit init), Exposed=(Window,Worker)]
+interface Response extends Body { // Response implements Body;
+  // static Response error();
+  // static Response redirect(USVString url, optional unsigned short status = 302);
+  type: ResponseType;
+  url: USVString;
+  status: number;
+  statusText: ByteString;
+  headers: Headers;
+  // Response clone();
+};
+
+// https://fetch.spec.whatwg.org/#responseinit
+class ResponseInit {
+  status: number = 200;
+  statusText: ByteString  = "OK";
+  headers: HeadersInit;
+};
+
+
+// https://fetch.spec.whatwg.org/#globalfetch
+// Window implements GlobalFetch;
+interface Window {
+  fetch(input: RequestInfo, init?: RequestInit): Promise<Response>;
+};
+
+this.fetch = function(input: RequestInfo, init?: RequestInit): Promise<Response> {
+  var p = new Promise<Response>(function(resolve, reject) {
+    try {
+      var r = (new Request(input, init)).request;
+    } catch(e) {
+      reject(e);
+    }
+  });
+
+  return p
+}
+
+// WorkerGlobalScope implements GlobalFetch;
+**/

@@ -74,11 +74,13 @@ enum ContextFrameType {
 }
 
 // https://fetch.spec.whatwg.org/#concept-request-mode
-enum RequestMode {
+enum RequestModeEnum {
   "same-origin",
   "no-cors",
   "cors"
 };
+
+type RequestMode = string;
 
 // https://fetch.spec.whatwg.org/#concept-request-credentials-mode
 enum RequestCredentials {
@@ -130,10 +132,6 @@ enum ForbiddenHeaderName {
   "User-Agent",
   "Via"
 };
-
-function isArray(o: any): boolean {
-  return Object.prototype.toString.call(o) === "[object Array]";
-}
 
 // https://fetch.spec.whatwg.org/#forbidden-header-name
 function isForbiddenHeaderName(name: ByteString): boolean {
@@ -219,7 +217,7 @@ class Headers implements IHeaders{
       return;
     }
 
-    if (isArray(init)) { // ByteString[][]
+    if (Array.isArray(init)) { // ByteString[][]
       var headerSequence = <ByteString[][]> init;
       headerSequence.forEach((header) => {
         if(header.length === 2) {
@@ -513,23 +511,12 @@ class Request implements IRequest {
 
   // https://fetch.spec.whatwg.org/#dom-request-referrer
   get referrer(): DOMString {
-    // TODO:
     return null;
   }
 
   // https://fetch.spec.whatwg.org/#dom-request-mode
-  get mode(): ByteString{
-    switch(this.mode) {
-      case RequestMode[same-origin]:
-        return "same-origin";
-      case "no-cors":
-        return "no-cors";
-      case "cors":
-        return "cors";
-      case "cors-with-forced-preflight":
-        return "cors";
-    }
-    return this.mode;
+  get mode(): RequestMode {
+    return null;
   }
 
   // https://fetch.spec.whatwg.org/#dom-request-credentials
@@ -539,10 +526,7 @@ class Request implements IRequest {
 
   // https://fetch.spec.whatwg.org/#dom-request-cache
   get cache(): RequestCache {
-    if (this.cache === "force-offline") {
-      return "force-offline";
-    }
-    return this.cache;
+    return null;
   }
 
   // https://fetch.spec.whatwg.org/#dom-body-bodyused
@@ -552,33 +536,33 @@ class Request implements IRequest {
 
   // https://fetch.spec.whatwg.org/#dom-request-clone
   // method on IRequest
-  public clone(): IRequest{
+  public clone(): IRequest {
     return null;
   }
 
   // https://fetch.spec.whatwg.org/#dom-body-arraybuffer
   // method on IBody
-  public arrayBuffer(): Promise<ArrayBuffer>{
+  public arrayBuffer(): Promise<ArrayBuffer> {
     return null;
   }
 
   // https://fetch.spec.whatwg.org/#dom-body-blob
-  public blob(): Promise<Blob>{
+  public blob(): Promise<Blob> {
     return null;
   }
 
   // https://fetch.spec.whatwg.org/#dom-body-formdata
-  public formData(): Promise<FormData>{
+  public formData(): Promise<FormData> {
     return null;
   }
 
   // https://fetch.spec.whatwg.org/#dom-body-json
-  public json(): Promise<JSON>{
+  public json(): Promise<JSON> {
     return null;
   }
 
   // https://fetch.spec.whatwg.org/#dom-body-text
-  public text(): Promise<USVString>{
+  public text(): Promise<USVString> {
     return null;
   }
 
@@ -697,9 +681,9 @@ class Request implements IRequest {
     this.request = request;
     this._headers = new Headers();
 
-    var headers = this.request._headers;
+    var headers = this.request.headers;
 
-    this.request._headers = null;
+    this.request.headers = null;
 
     // 19
     if (this.request.mode === "no-cors") {
