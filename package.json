@@ -1,0 +1,24 @@
+{
+  "name": "fetch",
+  "author": "Jxck",
+  "license": "MIT",
+  "version": "1.0.0",
+  "description": "implementaion of https://fetch.spec.whatwg.org/",
+  "homepage": "https://github.com/Jxck/fetch",
+  "bugs": {
+    "url": "https://github.com/Jxck/fetch/issues"
+  },
+  "keywords": [
+    "fetch",
+    "whatwg"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jxck/fetch"
+  },
+  "main": "fetch.ts",
+  "scripts": {
+    "build": "tsc fetch.ts --target ES5",
+    "test": "npm run build && node fetch.js"
+  }
+}
