@@ -359,9 +359,7 @@ var Headers = (function () {
 })();
 ;
 ;
-// https://fetch.spec.whatwg.org/#requestinit
-// dictionary RequestInit
-var RequestInit;
+;
 var Request = (function () {
     // https://fetch.spec.whatwg.org/#dom-request
     function Request(input, init) {
@@ -388,11 +386,11 @@ var Request = (function () {
                 headerList: [],
                 unsafeRequestFlag: false,
                 body: null,
-                //TODO: client : entry settings object,
-                //TODO: origin : entry settings object.origin,
+                //TODO: client:        entry settings object,
+                //TODO: origin:        entry settings object.origin,
                 forceOriginHeaderFlag: false,
                 sameOriginDataURLFlag: false,
-                //TODO: referrer : request.client,
+                referrer: null,
                 context: null,
                 mode: "no-cors",
                 credentialsMode: "omit",
@@ -406,8 +404,8 @@ var Request = (function () {
             headerList: request.headerList,
             unsafeRequestFlag: true,
             body: request.body,
-            //TODO: client : entry settings object,
-            //TODO: origin : entry settings object.origin,
+            //TODO: client: entry settings object,
+            //TODO: origin: entry settings object.origin,
             forceOriginHeaderFlag: true,
             sameOriginDataURLFlag: true,
             //TODO: referrer : request.client,
@@ -427,7 +425,13 @@ var Request = (function () {
         // step 7
         if (typeof input === "string") {
             // step 7-1
-            var parsedURL = parseURL(input);
+            var parsedURL;
+            try {
+                parsedURL = parseURL(input);
+            }
+            catch (err) {
+                throw new TypeError(err);
+            }
             // step 7-3
             request.url = parsedURL;
             // step 7-4, 7-5, 7-6
@@ -452,8 +456,8 @@ var Request = (function () {
             request.cacheMode = cache;
         // step 14
         if (init.method) {
-            // step 14-1
             var method = init.method;
+            // step 14-1
             if (isForbiddenMethod(method)) {
                 throw new TypeError("forbidden method " + method);
             }
@@ -462,16 +466,24 @@ var Request = (function () {
             // step 14-3
             request.method = method;
         }
-        this.request = request;
-        this._headers = new Headers();
-        var headers = this.request.headers;
-        this.request.headers = null;
-        // 19
-        if (this.request.mode === "no-cors") {
-            if (!isSimpleMethod(this.request.method)) {
-                throw new TypeError("not simple method" + method);
-            }
+        // step 15
+        var r = this;
+        r.request = request;
+        r._headers = new Headers();
+        // step 16
+        var headers = r.headers;
+        // step 17
+        if (init.headers) {
+            headers = init.headers;
         }
+        // step 18
+        r.request.headerList = [];
+        //// 19
+        //if (this.request.mode === "no-cors") {
+        //  if (!isSimpleMethod(this.request.method)) {
+        //    throw new TypeError("not simple method" + method);
+        //  }
+        //}
     }
     Object.defineProperty(Request.prototype, "method", {
         // https://fetch.spec.whatwg.org/#dom-request-method
@@ -573,45 +585,26 @@ var Request = (function () {
     };
     return Request;
 })();
-/**
-// https://fetch.spec.whatwg.org/#response
-// [Constructor(optional BodyInit body, optional ResponseInit init), Exposed=(Window,Worker)]
-interface Response extends Body { // Response implements Body;
-  // static Response error();
-  // static Response redirect(USVString url, optional unsigned short status = 302);
-  type: ResponseType;
-  url: USVString;
-  status: number;
-  statusText: ByteString;
-  headers: Headers;
-  // Response clone();
-};
-
+;
 // https://fetch.spec.whatwg.org/#responseinit
-class ResponseInit {
-  status: number = 200;
-  statusText: ByteString  = "OK";
-  headers: HeadersInit;
-};
-
-
-// https://fetch.spec.whatwg.org/#globalfetch
-// Window implements GlobalFetch;
-interface Window {
-  fetch(input: RequestInfo, init?: RequestInit): Promise<Response>;
-};
-
-this.fetch = function(input: RequestInfo, init?: RequestInit): Promise<Response> {
-  var p = new Promise<Response>(function(resolve, reject) {
-    try {
-      var r = (new Request(input, init)).request;
-    } catch(e) {
-      reject(e);
+var ResponseInit = (function () {
+    function ResponseInit() {
+        this.status = 200;
+        this.statusText = "OK";
     }
-  });
-
-  return p
-}
-
+    return ResponseInit;
+})();
+;
+;
+this.fetch = function (input, init) {
+    var p = new Promise(function (resolve, reject) {
+        try {
+            var r = (new Request(input, init)).request;
+        }
+        catch (e) {
+            reject(e);
+        }
+    });
+    return p;
+};
 // WorkerGlobalScope implements GlobalFetch;
-**/

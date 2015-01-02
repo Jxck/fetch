@@ -444,7 +444,7 @@ interface IRequest extends IBody {
 
 // https://fetch.spec.whatwg.org/#requestinit
 // dictionary RequestInit
-var RequestInit: {
+interface RequestInit {
   method:      ByteString;
   headers:     HeadersInit;
   body:        BodyInit;
@@ -573,7 +573,7 @@ class Request implements IRequest {
   public mimeType: string;
 
   // https://fetch.spec.whatwg.org/#dom-request
-  constructor(input: RequestInfo, init?: typeof RequestInit) {
+  constructor(input: RequestInfo, init?: RequestInit) {
     // can't detect class by instanceof
     // if (input instanceof Request) { }
 
@@ -593,39 +593,39 @@ class Request implements IRequest {
       // step 2
       // new request otherwise
       request = {
-        url: null,
-        method: "GET",
-        headerList: [],
-        unsafeRequestFlag: false,
-        body: null,
-        //TODO: client : entry settings object,
-        //TODO: origin : entry settings object.origin,
+        url:                   null,
+        method:                "GET",
+        headerList:            [],
+        unsafeRequestFlag:     false,
+        body:                  null,
+        //TODO: client:        entry settings object,
+        //TODO: origin:        entry settings object.origin,
         forceOriginHeaderFlag: false,
         sameOriginDataURLFlag: false,
-        //TODO: referrer : request.client,
-        context: null,
-        mode: "no-cors",
-        credentialsMode: "omit",
-        cacheMode : "default"
+        referrer:              null,
+        context:               null,
+        mode:                  "no-cors",
+        credentialsMode:       "omit",
+        cacheMode:             "default"
       }
     }
 
     // step 3
     request = {
-      url : request.url,
-      method : request.method,
-      headerList : request.headerList,
-      unsafeRequestFlag : true,
-      body : request.body,
-      //TODO: client : entry settings object,
-      //TODO: origin : entry settings object.origin,
-      forceOriginHeaderFlag : true,
-      sameOriginDataURLFlag : true,
+      url:                   request.url,
+      method:                request.method,
+      headerList:            request.headerList,
+      unsafeRequestFlag:     true,
+      body:                  request.body,
+      //TODO: client: entry settings object,
+      //TODO: origin: entry settings object.origin,
+      forceOriginHeaderFlag: true,
+      sameOriginDataURLFlag: true,
       //TODO: referrer : request.client,
-      context : 'fetch',
-      mode : request.mode,
-      credentialsMode : request.credentialsMode,
-      cacheMode : request.cacheMode
+      context:               'fetch',
+      mode:                  request.mode,
+      credentialsMode:       request.credentialsMode,
+      cacheMode:             request.cacheMode
     }
 
     // step 4, 5, 6
@@ -640,7 +640,15 @@ class Request implements IRequest {
     // step 7
     if (typeof input === "string") {
       // step 7-1
-      var parsedURL = parseURL(input);
+      var parsedURL;
+
+      try {
+        parsedURL = parseURL(input);
+      } catch(err) {
+        // step 7-2
+        throw new TypeError(err);
+      }
+
       // step 7-3
       request.url = parsedURL;
 
@@ -652,46 +660,62 @@ class Request implements IRequest {
 
     // step 8
     var mode = init.mode? init.mode: fallbackMode;
+
     // step 9
     if (mode != null) request.mode = mode;
 
     // step 10
     var credentials = init.credentials? init.credentials: fallbackCredentials;
+
     // step 11
     if (credentials != null) request.credentialsMode = credentials;
 
     // step 12
     var cache = init.cache? init.cache: fallbackCache;
+
     // step 13
     if (cache != null) request.cacheMode = cache;
 
     // step 14
     if (init.method) {
-      // step 14-1
       var method = init.method;
+
+      // step 14-1
       if(isForbiddenMethod(method)) {
         throw new TypeError("forbidden method " + method);
       }
+
       // step 14-2
       method = method.toUpperCase();
+
       // step 14-3
       request.method = method;
     }
 
-    this.request = request;
-    this._headers = new Headers();
+    // step 15
+    var r = this;
+    r.request = request;
+    r._headers = new Headers();
 
-    var headers = this.request.headers;
+    // step 16
+    var headers = r.headers;
 
-    this.request.headers = null;
-
-    // 19
-    if (this.request.mode === "no-cors") {
-      if (!isSimpleMethod(this.request.method)) {
-        throw new TypeError("not simple method" + method);
-      }
-
+    // step 17
+    if (init.headers) {
+      headers = <Headers>init.headers;
     }
+
+    // step 18
+    r.request.headerList = [];
+
+
+    //// 19
+    //if (this.request.mode === "no-cors") {
+    //  if (!isSimpleMethod(this.request.method)) {
+    //    throw new TypeError("not simple method" + method);
+    //  }
+
+    //}
 
 
   }
@@ -699,7 +723,6 @@ class Request implements IRequest {
 
 }
 
-/**
 // https://fetch.spec.whatwg.org/#response
 // [Constructor(optional BodyInit body, optional ResponseInit init), Exposed=(Window,Worker)]
 interface Response extends Body { // Response implements Body;
@@ -715,9 +738,9 @@ interface Response extends Body { // Response implements Body;
 
 // https://fetch.spec.whatwg.org/#responseinit
 class ResponseInit {
-  status: number = 200;
+  status:     number = 200;
   statusText: ByteString  = "OK";
-  headers: HeadersInit;
+  headers:    HeadersInit;
 };
 
 
@@ -740,4 +763,3 @@ this.fetch = function(input: RequestInfo, init?: RequestInit): Promise<Response>
 }
 
 // WorkerGlobalScope implements GlobalFetch;
-**/
