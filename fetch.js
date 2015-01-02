@@ -170,6 +170,12 @@ function isForbiddenMethod(method) {
     }
     return false;
 }
+function isSimpleMethod(method) {
+    if (SimpleMethod[method]) {
+        return true;
+    }
+    return false;
+}
 ;
 // https://fetch.spec.whatwg.org/#concept-header
 var Header = (function () {
@@ -478,12 +484,36 @@ var Request = (function () {
         }
         // step 18
         r.request.headerList = [];
-        //// 19
-        //if (this.request.mode === "no-cors") {
-        //  if (!isSimpleMethod(this.request.method)) {
-        //    throw new TypeError("not simple method" + method);
-        //  }
-        //}
+        // step 19
+        if (r.request.mode === "no-cors") {
+            // 19-1
+            if (!isSimpleMethod(this.request.method)) {
+                throw new TypeError("not simple method" + method);
+            }
+            // 19-2
+            r.headers.guard = "request-no-CORS";
+        }
+        // step 20
+        r._headers = headers;
+        // step 21
+        if (init.body) {
+            // step 21-1
+            var result = extract(init.body);
+            // step 21-2
+            r.request.body = result.stream;
+            // step 21-3
+            if (result.contentType !== null) {
+                var hasContentType = request.headerList.some(function (header) {
+                    return header.name === "Content-Type";
+                });
+                if (!hasContentType) {
+                    r._headers.append("Content-Type", result.contentType);
+                }
+            }
+        }
+        // step 22
+        // FIXME implement mime type extract
+        r.mimeType = null;
     }
     Object.defineProperty(Request.prototype, "method", {
         // https://fetch.spec.whatwg.org/#dom-request-method
@@ -585,6 +615,10 @@ var Request = (function () {
     };
     return Request;
 })();
+// TODO: implement
+function extract(body) {
+    return null;
+}
 ;
 // https://fetch.spec.whatwg.org/#responseinit
 var ResponseInit = (function () {

@@ -176,6 +176,13 @@ function isForbiddenMethod(method: ByteString): boolean {
   return false
 }
 
+function isSimpleMethod(method: ByteString): boolean {
+  if (SimpleMethod[method]) {
+    return true;
+  }
+  return false;
+}
+
 // https://fetch.spec.whatwg.org/#headersinit
 // typedef (Headers or sequence<sequence<ByteString>> or OpenEndedDictionary<ByteString>) HeadersInit;
 type HeadersInit = Headers | ByteString[][] | OpenEndedDictionary;
@@ -708,20 +715,51 @@ class Request implements IRequest {
     // step 18
     r.request.headerList = [];
 
+    // step 19
+    if (r.request.mode === "no-cors") {
+      // 19-1
+      if (!isSimpleMethod(this.request.method)) {
+        throw new TypeError("not simple method" + method);
+      }
+      // 19-2
+      r.headers.guard = "request-no-CORS";
+    }
 
-    //// 19
-    //if (this.request.mode === "no-cors") {
-    //  if (!isSimpleMethod(this.request.method)) {
-    //    throw new TypeError("not simple method" + method);
-    //  }
+    // step 20
+    r._headers = headers;
 
-    //}
+    // step 21
+    if (init.body) {
+      // step 21-1
+      var result = extract(init.body);
 
+      // step 21-2
+      r.request.body = result.stream;
 
+      // step 21-3
+      if (result.contentType !== null) {
+        var hasContentType = request.headerList.some(function(header) {
+          return header.name === "Content-Type";
+        });
+
+        if (!hasContentType) {
+          r._headers.append("Content-Type", result.contentType);
+        }
+      }
+    }
+
+    // step 22
+    // FIXME implement mime type extract
+    r.mimeType = null;
   }
-
-
 }
+
+// TODO: implement
+function extract(body: Body): any {
+  return null;
+}
+
+
 
 // https://fetch.spec.whatwg.org/#response
 // [Constructor(optional BodyInit body, optional ResponseInit init), Exposed=(Window,Worker)]
