@@ -37,11 +37,25 @@ enum SimpleMethodEnum {
   POST
 }
 
+function isSimpleMethod(method: ByteString): boolean {
+  if (SimpleMethodEnum[method] !== undefined) {
+    return true;
+  }
+  return false;
+}
+
 // https://fetch.spec.whatwg.org/#forbidden-method
 enum ForbiddenMethodEnum {
   CONNECT,
   TRACE,
   TRACK
+}
+
+function isForbiddenMethod(method: ByteString): boolean {
+  if (ForbiddenMethodEnum[method] !== undefined) {
+    return true;
+  }
+  return false
 }
 
 // https://fetch.spec.whatwg.org/#requestcontext
@@ -169,20 +183,6 @@ function isSimpleHeader(name, value: ByteString): boolean {
     }
   }
 
-  return false;
-}
-
-function isForbiddenMethod(method: ByteString): boolean {
-  if (ForbiddenMethodEnum[method] !== undefined) {
-    return true;
-  }
-  return false
-}
-
-function isSimpleMethod(method: ByteString): boolean {
-  if (SimpleMethodEnum[method] !== undefined) {
-    return true;
-  }
   return false;
 }
 
