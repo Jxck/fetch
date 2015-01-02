@@ -180,12 +180,20 @@ var Header = (function () {
     }
     return Header;
 })();
+var GuardEnum;
+(function (GuardEnum) {
+    GuardEnum[GuardEnum["immutable"] = 0] = "immutable";
+    GuardEnum[GuardEnum["request"] = 1] = "request";
+    GuardEnum[GuardEnum["request-no-CORS"] = 2] = "request-no-CORS";
+    GuardEnum[GuardEnum["response"] = 3] = "response";
+    GuardEnum[GuardEnum["none"] = 4] = "none";
+})(GuardEnum || (GuardEnum = {}));
 // https://fetch.spec.whatwg.org/#headers
 var Headers = (function () {
     // https://fetch.spec.whatwg.org/#dom-headers
     function Headers(init) {
         var _this = this;
-        this.guard = 'none';
+        this.guard = GuardEnum[4 /* none */];
         if (init instanceof Headers) {
             var headerListCopy = init.headerList;
             headerListCopy.forEach(function (header) {
@@ -216,17 +224,17 @@ var Headers = (function () {
             throw new TypeError("invalid name/value");
         }
         switch (this.guard) {
-            case "immutable":
+            case GuardEnum[0 /* immutable */]:
                 throw new TypeError("operation to immutable headers");
-            case "request":
+            case GuardEnum[1 /* request */]:
                 if (isForbiddenHeaderName(name)) {
                     return;
                 }
-            case "request-no-CORS":
+            case GuardEnum[2 /* "request-no-CORS" */]:
                 if (!isSimpleHeader(name, value)) {
                     return;
                 }
-            case "response":
+            case GuardEnum[3 /* response */]:
                 if (isForbiddenResponseHeaderName(name)) {
                     return;
                 }
@@ -242,17 +250,17 @@ var Headers = (function () {
             throw new TypeError("invalid name");
         }
         switch (this.guard) {
-            case "immutable":
+            case GuardEnum[0 /* immutable */]:
                 throw new TypeError("operation to immutable headers");
-            case "request":
+            case GuardEnum[1 /* request */]:
                 if (isForbiddenHeaderName(name)) {
                     return;
                 }
-            case "request-no-CORS":
+            case GuardEnum[2 /* "request-no-CORS" */]:
                 if (!isSimpleHeader(name, "invalid")) {
                     return;
                 }
-            case "response":
+            case GuardEnum[3 /* response */]:
                 if (isForbiddenResponseHeaderName(name)) {
                     return;
                 }
@@ -313,17 +321,17 @@ var Headers = (function () {
             throw new TypeError("invalid name/value");
         }
         switch (this.guard) {
-            case "immutable":
+            case GuardEnum[0 /* immutable */]:
                 throw new TypeError("operation to immutable headers");
-            case "request":
+            case GuardEnum[1 /* request */]:
                 if (isForbiddenHeaderName(name)) {
                     return;
                 }
-            case "request-no-CORS":
+            case GuardEnum[2 /* "request-no-CORS" */]:
                 if (!isSimpleHeader(name, "invalid")) {
                     return;
                 }
-            case "response":
+            case GuardEnum[3 /* response */]:
                 if (isForbiddenResponseHeaderName(name)) {
                     return;
                 }
@@ -383,7 +391,7 @@ var Request = (function () {
             // new request otherwise
             request = {
                 url: null,
-                method: "GET",
+                method: MethodEnum[1 /* GET */],
                 headerList: [],
                 unsafeRequestFlag: false,
                 body: null,
@@ -393,9 +401,9 @@ var Request = (function () {
                 sameOriginDataURLFlag: false,
                 referrer: null,
                 context: null,
-                mode: "no-cors",
-                credentialsMode: "omit",
-                cacheMode: "default"
+                mode: RequestModeEnum[1 /* "no-cors" */],
+                credentialsMode: RequestCredentialsEnum[0 /* omit */],
+                cacheMode: RequestCacheEnum[0 /* default */],
             };
         }
         // step 3
@@ -436,24 +444,24 @@ var Request = (function () {
             // step 7-3
             request.url = parsedURL;
             // step 7-4, 7-5, 7-6
-            fallbackMode = "CORS";
-            fallbackCredentials = "omit";
-            fallbackCache = "default";
+            fallbackMode = RequestModeEnum[2 /* cors */];
+            fallbackCredentials = RequestCredentialsEnum[0 /* omit */];
+            fallbackCache = RequestCacheEnum[0 /* default */];
         }
         // step 8
         var mode = init.mode ? init.mode : fallbackMode;
         // step 9
-        if (mode != null)
+        if (mode !== null)
             request.mode = mode;
         // step 10
         var credentials = init.credentials ? init.credentials : fallbackCredentials;
         // step 11
-        if (credentials != null)
+        if (credentials !== null)
             request.credentialsMode = credentials;
         // step 12
         var cache = init.cache ? init.cache : fallbackCache;
         // step 13
-        if (cache != null)
+        if (cache !== null)
             request.cacheMode = cache;
         // step 14
         if (init.method) {

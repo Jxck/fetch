@@ -211,10 +211,19 @@ class Header {
   }
 }
 
+type Guard = string;
+enum GuardEnum {
+  "immutable",
+  "request",
+  "request-no-CORS",
+  "response",
+  "none",
+}
+
 // https://fetch.spec.whatwg.org/#headers
 class Headers implements IHeaders{
   public headerList: Header[];
-  public guard: string = 'none';
+  public guard: Guard = GuardEnum[GuardEnum.none];
 
   // https://fetch.spec.whatwg.org/#dom-headers
   constructor(init?: HeadersInit) {
@@ -254,17 +263,17 @@ class Headers implements IHeaders{
 
     // step 2, 3, 4, 5
     switch(this.guard) {
-      case "immutable":
+      case GuardEnum[GuardEnum.immutable]:
         throw new TypeError("operation to immutable headers");
-      case "request":
+      case GuardEnum[GuardEnum.request]:
         if (isForbiddenHeaderName(name)) {
           return;
         }
-      case "request-no-CORS":
+      case GuardEnum[GuardEnum["request-no-CORS"]]:
         if (!isSimpleHeader(name, value)) {
           return;
         }
-      case "response":
+      case GuardEnum[GuardEnum.response]:
         if (isForbiddenResponseHeaderName(name)) {
           return;
         }
@@ -284,17 +293,17 @@ class Headers implements IHeaders{
 
     // step 2, 3, 4, 5
     switch(this.guard) {
-      case "immutable":
+      case GuardEnum[GuardEnum.immutable]:
         throw new TypeError("operation to immutable headers");
-      case "request":
+      case GuardEnum[GuardEnum.request]:
         if (isForbiddenHeaderName(name)) {
           return;
         }
-      case "request-no-CORS":
+      case GuardEnum[GuardEnum["request-no-CORS"]]:
         if (!isSimpleHeader(name, "invalid")) {
           return;
         }
-      case "response":
+      case GuardEnum[GuardEnum.response]:
         if (isForbiddenResponseHeaderName(name)) {
           return;
         }
@@ -366,17 +375,17 @@ class Headers implements IHeaders{
 
     // step 2, 3, 4, 5
     switch(this.guard) {
-      case "immutable":
+      case GuardEnum[GuardEnum.immutable]:
         throw new TypeError("operation to immutable headers");
-      case "request":
+      case GuardEnum[GuardEnum.request]:
         if (isForbiddenHeaderName(name)) {
           return;
         }
-      case "request-no-CORS":
+      case GuardEnum[GuardEnum["request-no-CORS"]]:
         if (!isSimpleHeader(name, "invalid")) {
           return;
         }
-      case "response":
+      case GuardEnum[GuardEnum.response]:
         if (isForbiddenResponseHeaderName(name)) {
           return;
         }
@@ -604,7 +613,7 @@ class Request implements IRequest {
       // new request otherwise
       request = {
         url:                   null,
-        method:                "GET",
+        method:                MethodEnum[MethodEnum.GET],
         headerList:            [],
         unsafeRequestFlag:     false,
         body:                  null,
@@ -614,9 +623,9 @@ class Request implements IRequest {
         sameOriginDataURLFlag: false,
         referrer:              null,
         context:               null,
-        mode:                  "no-cors",
-        credentialsMode:       "omit",
-        cacheMode:             "default"
+        mode:                  RequestModeEnum[RequestModeEnum["no-cors"]],
+        credentialsMode:       RequestCredentialsEnum[RequestCredentialsEnum.omit],
+        cacheMode:             RequestCacheEnum[RequestCacheEnum.default],
       }
     }
 
@@ -639,9 +648,9 @@ class Request implements IRequest {
     }
 
     // step 4, 5, 6
-    var fallbackMode = null;
-    var fallbackCredentials = null;
-    var fallbackCache = null;
+    var fallbackMode: RequestMode = null;
+    var fallbackCredentials: RequestCredentials = null;
+    var fallbackCache: RequestCache = null;
 
     //TODO:
     function parseURL(url: string): string {
@@ -663,9 +672,9 @@ class Request implements IRequest {
       request.url = parsedURL;
 
       // step 7-4, 7-5, 7-6
-      fallbackMode = "CORS";
-      fallbackCredentials = "omit";
-      fallbackCache = "default";
+      fallbackMode = RequestModeEnum[RequestModeEnum.cors];
+      fallbackCredentials = RequestCredentialsEnum[RequestCredentialsEnum.omit];
+      fallbackCache = RequestCacheEnum[RequestCacheEnum.default];
     }
 
     // step 8
@@ -769,11 +778,11 @@ function extract(body: Body): any {
 interface Response extends Body { // Response implements Body;
   // static Response error();
   // static Response redirect(USVString url, optional unsigned short status = 302);
-  type: ResponseType;
-  url: USVString;
-  status: number;
+  type:       ResponseType;
+  url:        USVString;
+  status:     number;
   statusText: ByteString;
-  headers: Headers;
+  headers:    Headers;
   // Response clone();
 };
 
