@@ -1,77 +1,75 @@
 /// <reference path="es6-promise.d.ts" />
 // https://fetch.spec.whatwg.org/#concept-method
-var Method;
-(function (Method) {
-    Method[Method["OPTIONS"] = 0] = "OPTIONS";
-    Method[Method["GET"] = 1] = "GET";
-    Method[Method["HEAD"] = 2] = "HEAD";
-    Method[Method["POST"] = 3] = "POST";
-    Method[Method["PUT"] = 4] = "PUT";
-    Method[Method["DELETE"] = 5] = "DELETE";
-    Method[Method["TRACE"] = 6] = "TRACE";
-    Method[Method["CONNECT"] = 7] = "CONNECT";
-})(Method || (Method = {}));
+var MethodEnum;
+(function (MethodEnum) {
+    MethodEnum[MethodEnum["OPTIONS"] = 0] = "OPTIONS";
+    MethodEnum[MethodEnum["GET"] = 1] = "GET";
+    MethodEnum[MethodEnum["HEAD"] = 2] = "HEAD";
+    MethodEnum[MethodEnum["POST"] = 3] = "POST";
+    MethodEnum[MethodEnum["PUT"] = 4] = "PUT";
+    MethodEnum[MethodEnum["DELETE"] = 5] = "DELETE";
+    MethodEnum[MethodEnum["TRACE"] = 6] = "TRACE";
+    MethodEnum[MethodEnum["CONNECT"] = 7] = "CONNECT";
+})(MethodEnum || (MethodEnum = {}));
 // https://fetch.spec.whatwg.org/#simple-method
-var SimpleMethod;
-(function (SimpleMethod) {
-    SimpleMethod[SimpleMethod["GET"] = 0] = "GET";
-    SimpleMethod[SimpleMethod["HEAD"] = 1] = "HEAD";
-    SimpleMethod[SimpleMethod["POST"] = 2] = "POST";
-})(SimpleMethod || (SimpleMethod = {}));
+var SimpleMethodEnum;
+(function (SimpleMethodEnum) {
+    SimpleMethodEnum[SimpleMethodEnum["GET"] = 0] = "GET";
+    SimpleMethodEnum[SimpleMethodEnum["HEAD"] = 1] = "HEAD";
+    SimpleMethodEnum[SimpleMethodEnum["POST"] = 2] = "POST";
+})(SimpleMethodEnum || (SimpleMethodEnum = {}));
 // https://fetch.spec.whatwg.org/#forbidden-method
-var ForbiddenMethod;
-(function (ForbiddenMethod) {
-    ForbiddenMethod[ForbiddenMethod["CONNECT"] = 0] = "CONNECT";
-    ForbiddenMethod[ForbiddenMethod["TRACE"] = 1] = "TRACE";
-    ForbiddenMethod[ForbiddenMethod["TRACK"] = 2] = "TRACK";
-})(ForbiddenMethod || (ForbiddenMethod = {}));
-// https://fetch.spec.whatwg.org/#requestcontext
-var RequestContext;
-(function (RequestContext) {
-    RequestContext[RequestContext["audio"] = 0] = "audio";
-    RequestContext[RequestContext["beacon"] = 1] = "beacon";
-    RequestContext[RequestContext["cspreport"] = 2] = "cspreport";
-    RequestContext[RequestContext["download"] = 3] = "download";
-    RequestContext[RequestContext["embed"] = 4] = "embed";
-    RequestContext[RequestContext["eventsource"] = 5] = "eventsource";
-    RequestContext[RequestContext["favicon"] = 6] = "favicon";
-    RequestContext[RequestContext["fetch"] = 7] = "fetch";
-    RequestContext[RequestContext["font"] = 8] = "font";
-    RequestContext[RequestContext["form"] = 9] = "form";
-    RequestContext[RequestContext["frame"] = 10] = "frame";
-    RequestContext[RequestContext["hyperlink"] = 11] = "hyperlink";
-    RequestContext[RequestContext["iframe"] = 12] = "iframe";
-    RequestContext[RequestContext["image"] = 13] = "image";
-    RequestContext[RequestContext["imageset"] = 14] = "imageset";
-    RequestContext[RequestContext["import"] = 15] = "import";
-    RequestContext[RequestContext["internal"] = 16] = "internal";
-    RequestContext[RequestContext["location"] = 17] = "location";
-    RequestContext[RequestContext["manifest"] = 18] = "manifest";
-    RequestContext[RequestContext["object"] = 19] = "object";
-    RequestContext[RequestContext["ping"] = 20] = "ping";
-    RequestContext[RequestContext["plugin"] = 21] = "plugin";
-    RequestContext[RequestContext["prefetch"] = 22] = "prefetch";
-    RequestContext[RequestContext["script"] = 23] = "script";
-    RequestContext[RequestContext["serviceworker"] = 24] = "serviceworker";
-    RequestContext[RequestContext["sharedworker"] = 25] = "sharedworker";
-    RequestContext[RequestContext["subresource"] = 26] = "subresource";
-    RequestContext[RequestContext["style"] = 27] = "style";
-    RequestContext[RequestContext["track"] = 28] = "track";
-    RequestContext[RequestContext["video"] = 29] = "video";
-    RequestContext[RequestContext["worker"] = 30] = "worker";
-    RequestContext[RequestContext["xmlhttprequest"] = 31] = "xmlhttprequest";
-    RequestContext[RequestContext["xslt"] = 32] = "xslt";
-})(RequestContext || (RequestContext = {}));
+var ForbiddenMethodEnum;
+(function (ForbiddenMethodEnum) {
+    ForbiddenMethodEnum[ForbiddenMethodEnum["CONNECT"] = 0] = "CONNECT";
+    ForbiddenMethodEnum[ForbiddenMethodEnum["TRACE"] = 1] = "TRACE";
+    ForbiddenMethodEnum[ForbiddenMethodEnum["TRACK"] = 2] = "TRACK";
+})(ForbiddenMethodEnum || (ForbiddenMethodEnum = {}));
+var RequestContextEnum;
+(function (RequestContextEnum) {
+    RequestContextEnum[RequestContextEnum["audio"] = 0] = "audio";
+    RequestContextEnum[RequestContextEnum["beacon"] = 1] = "beacon";
+    RequestContextEnum[RequestContextEnum["cspreport"] = 2] = "cspreport";
+    RequestContextEnum[RequestContextEnum["download"] = 3] = "download";
+    RequestContextEnum[RequestContextEnum["embed"] = 4] = "embed";
+    RequestContextEnum[RequestContextEnum["eventsource"] = 5] = "eventsource";
+    RequestContextEnum[RequestContextEnum["favicon"] = 6] = "favicon";
+    RequestContextEnum[RequestContextEnum["fetch"] = 7] = "fetch";
+    RequestContextEnum[RequestContextEnum["font"] = 8] = "font";
+    RequestContextEnum[RequestContextEnum["form"] = 9] = "form";
+    RequestContextEnum[RequestContextEnum["frame"] = 10] = "frame";
+    RequestContextEnum[RequestContextEnum["hyperlink"] = 11] = "hyperlink";
+    RequestContextEnum[RequestContextEnum["iframe"] = 12] = "iframe";
+    RequestContextEnum[RequestContextEnum["image"] = 13] = "image";
+    RequestContextEnum[RequestContextEnum["imageset"] = 14] = "imageset";
+    RequestContextEnum[RequestContextEnum["import"] = 15] = "import";
+    RequestContextEnum[RequestContextEnum["internal"] = 16] = "internal";
+    RequestContextEnum[RequestContextEnum["location"] = 17] = "location";
+    RequestContextEnum[RequestContextEnum["manifest"] = 18] = "manifest";
+    RequestContextEnum[RequestContextEnum["object"] = 19] = "object";
+    RequestContextEnum[RequestContextEnum["ping"] = 20] = "ping";
+    RequestContextEnum[RequestContextEnum["plugin"] = 21] = "plugin";
+    RequestContextEnum[RequestContextEnum["prefetch"] = 22] = "prefetch";
+    RequestContextEnum[RequestContextEnum["script"] = 23] = "script";
+    RequestContextEnum[RequestContextEnum["serviceworker"] = 24] = "serviceworker";
+    RequestContextEnum[RequestContextEnum["sharedworker"] = 25] = "sharedworker";
+    RequestContextEnum[RequestContextEnum["subresource"] = 26] = "subresource";
+    RequestContextEnum[RequestContextEnum["style"] = 27] = "style";
+    RequestContextEnum[RequestContextEnum["track"] = 28] = "track";
+    RequestContextEnum[RequestContextEnum["video"] = 29] = "video";
+    RequestContextEnum[RequestContextEnum["worker"] = 30] = "worker";
+    RequestContextEnum[RequestContextEnum["xmlhttprequest"] = 31] = "xmlhttprequest";
+    RequestContextEnum[RequestContextEnum["xslt"] = 32] = "xslt";
+})(RequestContextEnum || (RequestContextEnum = {}));
 ;
 // https://fetch.spec.whatwg.org/#concept-request-context-frame-type
-var ContextFrameType;
-(function (ContextFrameType) {
-    ContextFrameType[ContextFrameType["auxiliary"] = 0] = "auxiliary";
-    ContextFrameType[ContextFrameType["top-level"] = 1] = "top-level";
-    ContextFrameType[ContextFrameType["nested"] = 2] = "nested";
-    ContextFrameType[ContextFrameType["none"] = 3] = "none";
-})(ContextFrameType || (ContextFrameType = {}));
-// https://fetch.spec.whatwg.org/#concept-request-mode
+var ContextFrameTypeEnum;
+(function (ContextFrameTypeEnum) {
+    ContextFrameTypeEnum[ContextFrameTypeEnum["auxiliary"] = 0] = "auxiliary";
+    ContextFrameTypeEnum[ContextFrameTypeEnum["top-level"] = 1] = "top-level";
+    ContextFrameTypeEnum[ContextFrameTypeEnum["nested"] = 2] = "nested";
+    ContextFrameTypeEnum[ContextFrameTypeEnum["none"] = 3] = "none";
+})(ContextFrameTypeEnum || (ContextFrameTypeEnum = {}));
 var RequestModeEnum;
 (function (RequestModeEnum) {
     RequestModeEnum[RequestModeEnum["same-origin"] = 0] = "same-origin";
@@ -79,64 +77,61 @@ var RequestModeEnum;
     RequestModeEnum[RequestModeEnum["cors"] = 2] = "cors";
 })(RequestModeEnum || (RequestModeEnum = {}));
 ;
-// https://fetch.spec.whatwg.org/#concept-request-credentials-mode
-var RequestCredentials;
-(function (RequestCredentials) {
-    RequestCredentials[RequestCredentials["omit"] = 0] = "omit";
-    RequestCredentials[RequestCredentials["same-origin"] = 1] = "same-origin";
-    RequestCredentials[RequestCredentials["include"] = 2] = "include";
-})(RequestCredentials || (RequestCredentials = {}));
+var RequestCredentialsEnum;
+(function (RequestCredentialsEnum) {
+    RequestCredentialsEnum[RequestCredentialsEnum["omit"] = 0] = "omit";
+    RequestCredentialsEnum[RequestCredentialsEnum["same-origin"] = 1] = "same-origin";
+    RequestCredentialsEnum[RequestCredentialsEnum["include"] = 2] = "include";
+})(RequestCredentialsEnum || (RequestCredentialsEnum = {}));
 ;
-// https://fetch.spec.whatwg.org/#concept-request-cache-mode
-var RequestCache;
-(function (RequestCache) {
-    RequestCache[RequestCache["default"] = 0] = "default";
-    RequestCache[RequestCache["bypass"] = 1] = "bypass";
-    RequestCache[RequestCache["reload"] = 2] = "reload";
-    RequestCache[RequestCache["revalidate"] = 3] = "revalidate";
-    RequestCache[RequestCache["force-cache"] = 4] = "force-cache";
-    RequestCache[RequestCache["offline"] = 5] = "offline";
-})(RequestCache || (RequestCache = {}));
+var RequestCacheEnum;
+(function (RequestCacheEnum) {
+    RequestCacheEnum[RequestCacheEnum["default"] = 0] = "default";
+    RequestCacheEnum[RequestCacheEnum["bypass"] = 1] = "bypass";
+    RequestCacheEnum[RequestCacheEnum["reload"] = 2] = "reload";
+    RequestCacheEnum[RequestCacheEnum["revalidate"] = 3] = "revalidate";
+    RequestCacheEnum[RequestCacheEnum["force-cache"] = 4] = "force-cache";
+    RequestCacheEnum[RequestCacheEnum["offline"] = 5] = "offline";
+})(RequestCacheEnum || (RequestCacheEnum = {}));
 ;
-// https://fetch.spec.whatwg.org/#concept-response-type
-var ResponseType;
-(function (ResponseType) {
-    ResponseType[ResponseType["basic"] = 0] = "basic";
-    ResponseType[ResponseType["cors"] = 1] = "cors";
-    ResponseType[ResponseType["default"] = 2] = "default";
-    ResponseType[ResponseType["error"] = 3] = "error";
-    ResponseType[ResponseType["opaque"] = 4] = "opaque";
-})(ResponseType || (ResponseType = {}));
+var ResponseTypeEnum;
+(function (ResponseTypeEnum) {
+    ResponseTypeEnum[ResponseTypeEnum["basic"] = 0] = "basic";
+    ResponseTypeEnum[ResponseTypeEnum["cors"] = 1] = "cors";
+    ResponseTypeEnum[ResponseTypeEnum["default"] = 2] = "default";
+    ResponseTypeEnum[ResponseTypeEnum["error"] = 3] = "error";
+    ResponseTypeEnum[ResponseTypeEnum["opaque"] = 4] = "opaque";
+})(ResponseTypeEnum || (ResponseTypeEnum = {}));
 ;
 // https://fetch.spec.whatwg.org/#forbidden-header-name
-var ForbiddenHeaderName;
-(function (ForbiddenHeaderName) {
-    ForbiddenHeaderName[ForbiddenHeaderName["Accept-Charset"] = 0] = "Accept-Charset";
-    ForbiddenHeaderName[ForbiddenHeaderName["Accept-Encoding"] = 1] = "Accept-Encoding";
-    ForbiddenHeaderName[ForbiddenHeaderName["Access-Control-Request-Headers"] = 2] = "Access-Control-Request-Headers";
-    ForbiddenHeaderName[ForbiddenHeaderName["Access-Control-Request-Method"] = 3] = "Access-Control-Request-Method";
-    ForbiddenHeaderName[ForbiddenHeaderName["Connection"] = 4] = "Connection";
-    ForbiddenHeaderName[ForbiddenHeaderName["Content-Length"] = 5] = "Content-Length";
-    ForbiddenHeaderName[ForbiddenHeaderName["Cookie"] = 6] = "Cookie";
-    ForbiddenHeaderName[ForbiddenHeaderName["Cookie2"] = 7] = "Cookie2";
-    ForbiddenHeaderName[ForbiddenHeaderName["Date"] = 8] = "Date";
-    ForbiddenHeaderName[ForbiddenHeaderName["DNT"] = 9] = "DNT";
-    ForbiddenHeaderName[ForbiddenHeaderName["Expect"] = 10] = "Expect";
-    ForbiddenHeaderName[ForbiddenHeaderName["Host"] = 11] = "Host";
-    ForbiddenHeaderName[ForbiddenHeaderName["Keep-Alive"] = 12] = "Keep-Alive";
-    ForbiddenHeaderName[ForbiddenHeaderName["Origin"] = 13] = "Origin";
-    ForbiddenHeaderName[ForbiddenHeaderName["Referer"] = 14] = "Referer";
-    ForbiddenHeaderName[ForbiddenHeaderName["TE"] = 15] = "TE";
-    ForbiddenHeaderName[ForbiddenHeaderName["Trailer"] = 16] = "Trailer";
-    ForbiddenHeaderName[ForbiddenHeaderName["Transfer-Encoding"] = 17] = "Transfer-Encoding";
-    ForbiddenHeaderName[ForbiddenHeaderName["Upgrade"] = 18] = "Upgrade";
-    ForbiddenHeaderName[ForbiddenHeaderName["User-Agent"] = 19] = "User-Agent";
-    ForbiddenHeaderName[ForbiddenHeaderName["Via"] = 20] = "Via";
-})(ForbiddenHeaderName || (ForbiddenHeaderName = {}));
+var ForbiddenHeaderNameEnum;
+(function (ForbiddenHeaderNameEnum) {
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Accept-Charset"] = 0] = "Accept-Charset";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Accept-Encoding"] = 1] = "Accept-Encoding";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Access-Control-Request-Headers"] = 2] = "Access-Control-Request-Headers";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Access-Control-Request-Method"] = 3] = "Access-Control-Request-Method";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Connection"] = 4] = "Connection";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Content-Length"] = 5] = "Content-Length";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Cookie"] = 6] = "Cookie";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Cookie2"] = 7] = "Cookie2";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Date"] = 8] = "Date";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["DNT"] = 9] = "DNT";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Expect"] = 10] = "Expect";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Host"] = 11] = "Host";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Keep-Alive"] = 12] = "Keep-Alive";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Origin"] = 13] = "Origin";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Referer"] = 14] = "Referer";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["TE"] = 15] = "TE";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Trailer"] = 16] = "Trailer";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Transfer-Encoding"] = 17] = "Transfer-Encoding";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Upgrade"] = 18] = "Upgrade";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["User-Agent"] = 19] = "User-Agent";
+    ForbiddenHeaderNameEnum[ForbiddenHeaderNameEnum["Via"] = 20] = "Via";
+})(ForbiddenHeaderNameEnum || (ForbiddenHeaderNameEnum = {}));
 ;
 // https://fetch.spec.whatwg.org/#forbidden-header-name
 function isForbiddenHeaderName(name) {
-    if (ForbiddenHeaderName[name] != undefined) {
+    if (ForbiddenHeaderNameEnum[name] !== undefined) {
         return true;
     }
     var reg = /^(Proxy\-|Sec\-)/;
@@ -165,13 +160,13 @@ function isSimpleHeader(name, value) {
     return false;
 }
 function isForbiddenMethod(method) {
-    if (ForbiddenMethod[method]) {
+    if (ForbiddenMethodEnum[method] !== undefined) {
         return true;
     }
     return false;
 }
 function isSimpleMethod(method) {
-    if (SimpleMethod[method]) {
+    if (SimpleMethodEnum[method] !== undefined) {
         return true;
     }
     return false;

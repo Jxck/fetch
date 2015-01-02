@@ -19,7 +19,7 @@ type DOMString = string;
 type OpenEndedDictionary = Object;
 
 // https://fetch.spec.whatwg.org/#concept-method
-enum Method {
+enum MethodEnum {
   OPTIONS,
   GET,
   HEAD,
@@ -31,21 +31,22 @@ enum Method {
 }
 
 // https://fetch.spec.whatwg.org/#simple-method
-enum SimpleMethod {
+enum SimpleMethodEnum {
   GET,
   HEAD,
   POST
 }
 
 // https://fetch.spec.whatwg.org/#forbidden-method
-enum ForbiddenMethod {
+enum ForbiddenMethodEnum {
   CONNECT,
   TRACE,
   TRACK
 }
 
 // https://fetch.spec.whatwg.org/#requestcontext
-enum RequestContext {
+type RequestContext = string;
+enum RequestContextEnum {
   "audio",         "beacon",
   "cspreport",     "download",
   "embed",         "eventsource",
@@ -66,7 +67,7 @@ enum RequestContext {
 };
 
 // https://fetch.spec.whatwg.org/#concept-request-context-frame-type
-enum ContextFrameType {
+enum ContextFrameTypeEnum {
   "auxiliary",
   "top-level",
   "nested",
@@ -74,23 +75,24 @@ enum ContextFrameType {
 }
 
 // https://fetch.spec.whatwg.org/#concept-request-mode
+type RequestMode = string;
 enum RequestModeEnum {
   "same-origin",
   "no-cors",
   "cors"
 };
 
-type RequestMode = string;
-
 // https://fetch.spec.whatwg.org/#concept-request-credentials-mode
-enum RequestCredentials {
+type RequestCredentials = string;
+enum RequestCredentialsEnum {
   "omit",
   "same-origin",
   "include"
 };
 
 // https://fetch.spec.whatwg.org/#concept-request-cache-mode
-enum RequestCache {
+type RequestCache = string;
+enum RequestCacheEnum {
   "default",
   "bypass",
   "reload",
@@ -100,7 +102,8 @@ enum RequestCache {
 };
 
 // https://fetch.spec.whatwg.org/#concept-response-type
-enum ResponseType {
+type ResponseType = string;
+enum ResponseTypeEnum {
   "basic",
   "cors",
   "default",
@@ -109,7 +112,7 @@ enum ResponseType {
 };
 
 // https://fetch.spec.whatwg.org/#forbidden-header-name
-enum ForbiddenHeaderName {
+enum ForbiddenHeaderNameEnum {
   "Accept-Charset",
   "Accept-Encoding",
   "Access-Control-Request-Headers",
@@ -135,7 +138,7 @@ enum ForbiddenHeaderName {
 
 // https://fetch.spec.whatwg.org/#forbidden-header-name
 function isForbiddenHeaderName(name: ByteString): boolean {
-  if (ForbiddenHeaderName[name] != undefined) {
+  if (ForbiddenHeaderNameEnum[name] !== undefined) {
     return true;
   }
   var reg = /^(Proxy\-|Sec\-)/
@@ -170,14 +173,14 @@ function isSimpleHeader(name, value: ByteString): boolean {
 }
 
 function isForbiddenMethod(method: ByteString): boolean {
-  if (ForbiddenMethod[method]) {
+  if (ForbiddenMethodEnum[method] !== undefined) {
     return true;
   }
   return false
 }
 
 function isSimpleMethod(method: ByteString): boolean {
-  if (SimpleMethod[method]) {
+  if (SimpleMethodEnum[method] !== undefined) {
     return true;
   }
   return false;
@@ -669,19 +672,19 @@ class Request implements IRequest {
     var mode = init.mode? init.mode: fallbackMode;
 
     // step 9
-    if (mode != null) request.mode = mode;
+    if (mode !== null) request.mode = mode;
 
     // step 10
     var credentials = init.credentials? init.credentials: fallbackCredentials;
 
     // step 11
-    if (credentials != null) request.credentialsMode = credentials;
+    if (credentials !== null) request.credentialsMode = credentials;
 
     // step 12
     var cache = init.cache? init.cache: fallbackCache;
 
     // step 13
-    if (cache != null) request.cacheMode = cache;
+    if (cache !== null) request.cacheMode = cache;
 
     // step 14
     if (init.method) {
