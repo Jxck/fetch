@@ -231,9 +231,11 @@ class Headers implements IHeaders{
   public guard: Guard = GuardEnum[GuardEnum.none];
 
   // https://fetch.spec.whatwg.org/#dom-headers
+  // https://fetch.spec.whatwg.org/#concept-headers-fill
   constructor(init?: HeadersInit) {
 
-    if (init instanceof Headers) { // Headers
+    // step 1 Headers
+    if (init instanceof Headers) {
       var headerListCopy = init.headerList;
       headerListCopy.forEach((header) => {
         this.append(header.name, header.value);
@@ -241,7 +243,8 @@ class Headers implements IHeaders{
       return;
     }
 
-    if (Array.isArray(init)) { // ByteString[][]
+    // step 2 ByteString[][]
+    if (Array.isArray(init)) {
       var headerSequence = <ByteString[][]> init;
       headerSequence.forEach((header) => {
         if(header.length === 2) {
@@ -252,7 +255,8 @@ class Headers implements IHeaders{
       return;
     }
 
-    if (init) { // OpenEndedDictionary
+    // step 3 OpenEndedDictionary
+    if (init) {
       Object.keys(init).forEach((key) => {
         this.append(key, init[key]);
       });
@@ -511,6 +515,9 @@ test("Headers", function() {
 })(function() {
   var headersInit: Headers = new Headers();
   headersInit.append("key", "value");
+
+  var headers: Headers = new Headers(headersInit);
+  console.log(headers);
 })();
 
 
