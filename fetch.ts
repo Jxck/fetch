@@ -423,7 +423,6 @@ class Headers implements IHeaders{
       return this.append(name, value);
     }
 
-    debugger;
     // step 6-2
     // remove the headers in indexes from the last(because splice chenges index)
     // and change first header value
@@ -433,7 +432,7 @@ class Headers implements IHeaders{
         this.headerList[e].value = value;
       } else {
         // remove duplicate from last
-        this.headerList = this.headerList.splice(e, 1);
+        this.headerList.splice(e, 1);
       }
     });
   }
@@ -477,15 +476,15 @@ function assert(actual, expected) {
 })();
 
 (function() {
-  //var headers: Headers = new Headers();
-  //headers.set("key", "value1");
-  //assert(headers.get("key"), "value1");
-  //assert(headers.getAll("key").length, 1);
+  var headers: Headers = new Headers();
+  headers.set("key", "value1");
+  assert(headers.get("key"), "value1");
+  assert(headers.getAll("key").length, 1);
 
-  //headers.append("key", "value2");
-  //assert(headers.getAll("key").length, 2);
-  //headers.set("key", "vvvv");
-  //assert(headers.getAll("key").length, 1);
+  headers.append("key", "value2");
+  assert(headers.getAll("key").length, 2);
+  headers.set("key", "vvvv");
+  assert(headers.getAll("key").length, 1);
 
   var headers: Headers = new Headers();
   headers.append("k0", "v0");
