@@ -227,7 +227,7 @@ enum GuardEnum {
 
 // https://fetch.spec.whatwg.org/#headers
 class Headers implements IHeaders{
-  public headerList: Header[];
+  public headerList: Header[] = [];
   public guard: Guard = GuardEnum[GuardEnum.none];
 
   // https://fetch.spec.whatwg.org/#dom-headers
@@ -378,28 +378,34 @@ class Headers implements IHeaders{
       throw new TypeError("invalid name/value");
     }
 
-    // step 2, 3, 4, 5
     switch(this.guard) {
+      // step 2
       case GuardEnum[GuardEnum.immutable]:
         throw new TypeError("operation to immutable headers");
+      // step 3
       case GuardEnum[GuardEnum.request]:
         if (isForbiddenHeaderName(name)) {
           return;
         }
+      // step 4
       case GuardEnum[GuardEnum["request-no-CORS"]]:
         if (!isSimpleHeader(name, "invalid")) {
           return;
         }
+      // step 5
       case GuardEnum[GuardEnum.response]:
         if (isForbiddenResponseHeaderName(name)) {
           return;
         }
     }
 
+    // step 6
+    // see https://fetch.spec.whatwg.org/#concept-header-list-set
+
+    // step 6-1
     name = name.toLowerCase();
 
-    // step 6, and "The value pairs to iterate over are the headers in the header list"
-    // get all index of name
+    // find the all indexes of headers whos key is supplyed key
     var indexes: number[] = this.headerList.reduce((acc: number[], header: Header, index: number) => {
       if (header.name === name) {
         acc.push(index);
@@ -407,24 +413,90 @@ class Headers implements IHeaders{
       return acc;
     }, []);
 
+    // count of existing headers
     var len = indexes.length;
+
+    // step 6-3
+    // if there are no key
     if (len === 0) {
-      // no entry, so append to last
-      this.append(name, value);
-    } else {
-      // splice chenges index, so reverse and process from back
-      indexes.reverse().forEach((e, i: number) => {
-        if(i === len) {
-          // only replace first entry
-          this.headerList[e].value = value;
-        } else {
-          // remove duplicate from last
-          this.headerList = this.headerList.splice(e, 1);
-        }
-      });
+      // append to last and return
+      return this.append(name, value);
     }
+
+    debugger;
+    // step 6-2
+    // remove the headers in indexes from the last(because splice chenges index)
+    // and change first header value
+    indexes.reverse().forEach((e, i: number) => {
+      if(i === len - 1) {
+        // only replace first entry
+        this.headerList[e].value = value;
+      } else {
+        // remove duplicate from last
+        this.headerList = this.headerList.splice(e, 1);
+      }
+    });
   }
 }
+
+/////////////////////////////
+/// Headers Tests
+/////////////////////////////
+
+// tests
+function assert(actual, expected) {
+  console.log('.');
+  console.assert(actual === expected, '\nact: ' + actual + '\nexp: ' + expected);
+}
+
+(function() {
+  var header: Header = new Header("key", "value");
+  assert(header.name,  "key");
+  assert(header.value, "value");
+})();
+
+(function() {
+  var headers: Headers = new Headers();
+  assert(headers.append("key", "value"), undefined);
+  assert(headers.get("key"), "value");
+  assert(headers.has("key"), true);
+  assert(headers.has("k"), false);
+  assert(headers.append("key", "v2"), undefined);
+
+  var values = headers.getAll("key");
+  assert(values.length, 2);
+  assert(values[0], "value");
+  assert(values[1], "v2");
+})();
+
+(function() {
+  //var headers: Headers = new Headers();
+  //headers.set("key", "value1");
+  //assert(headers.get("key"), "value1");
+  //assert(headers.getAll("key").length, 1);
+
+  //headers.append("key", "value2");
+  //assert(headers.getAll("key").length, 2);
+  //headers.set("key", "vvvv");
+  //assert(headers.getAll("key").length, 1);
+
+  var headers: Headers = new Headers();
+  headers.append("k0", "v0");
+  headers.append("k1", "v1");
+  headers.append("k0", "v2");
+  headers.append("k3", "v3");
+  headers.append("k0", "v4");
+
+  headers.set("k0", "vvvv");
+  assert(headers.getAll("k0").length, 1);
+  assert(headers.get("k0"), "vvvv");
+})();
+
+(function() {
+  var headersInit: Headers = new Headers();
+  headersInit.append("key", "value");
+})();
+
 
 // https://fetch.spec.whatwg.org/#json
 type object = JSON;

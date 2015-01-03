@@ -18,6 +18,12 @@ var SimpleMethodEnum;
     SimpleMethodEnum[SimpleMethodEnum["HEAD"] = 1] = "HEAD";
     SimpleMethodEnum[SimpleMethodEnum["POST"] = 2] = "POST";
 })(SimpleMethodEnum || (SimpleMethodEnum = {}));
+function isSimpleMethod(method) {
+    if (SimpleMethodEnum[method] !== undefined) {
+        return true;
+    }
+    return false;
+}
 // https://fetch.spec.whatwg.org/#forbidden-method
 var ForbiddenMethodEnum;
 (function (ForbiddenMethodEnum) {
@@ -25,6 +31,12 @@ var ForbiddenMethodEnum;
     ForbiddenMethodEnum[ForbiddenMethodEnum["TRACE"] = 1] = "TRACE";
     ForbiddenMethodEnum[ForbiddenMethodEnum["TRACK"] = 2] = "TRACK";
 })(ForbiddenMethodEnum || (ForbiddenMethodEnum = {}));
+function isForbiddenMethod(method) {
+    if (ForbiddenMethodEnum[method] !== undefined) {
+        return true;
+    }
+    return false;
+}
 var RequestContextEnum;
 (function (RequestContextEnum) {
     RequestContextEnum[RequestContextEnum["audio"] = 0] = "audio";
@@ -159,18 +171,6 @@ function isSimpleHeader(name, value) {
     }
     return false;
 }
-function isForbiddenMethod(method) {
-    if (ForbiddenMethodEnum[method] !== undefined) {
-        return true;
-    }
-    return false;
-}
-function isSimpleMethod(method) {
-    if (SimpleMethodEnum[method] !== undefined) {
-        return true;
-    }
-    return false;
-}
 ;
 // https://fetch.spec.whatwg.org/#concept-header
 var Header = (function () {
@@ -193,6 +193,7 @@ var Headers = (function () {
     // https://fetch.spec.whatwg.org/#dom-headers
     function Headers(init) {
         var _this = this;
+        this.headerList = [];
         this.guard = GuardEnum[4 /* none */];
         if (init instanceof Headers) {
             var headerListCopy = init.headerList;
@@ -336,35 +337,89 @@ var Headers = (function () {
                     return;
                 }
         }
+        // step 6
+        // see https://fetch.spec.whatwg.org/#concept-header-list-set
+        // step 6-1
         name = name.toLowerCase();
-        // step 6, and "The value pairs to iterate over are the headers in the header list"
-        // get all index of name
+        // find the all indexes of headers whos key is supplyed key
         var indexes = this.headerList.reduce(function (acc, header, index) {
             if (header.name === name) {
                 acc.push(index);
             }
             return acc;
         }, []);
+        // count of existing headers
         var len = indexes.length;
+        // step 6-3
+        // if there are no key
         if (len === 0) {
-            // no entry, so append to last
-            this.append(name, value);
+            // append to last and return
+            return this.append(name, value);
         }
-        else {
-            // splice chenges index, so reverse and process from back
-            indexes.reverse().forEach(function (e, i) {
-                if (i === len) {
-                    // only replace first entry
-                    _this.headerList[e].value = value;
-                }
-                else {
-                    // remove duplicate from last
-                    _this.headerList = _this.headerList.splice(e, 1);
-                }
-            });
-        }
+        debugger;
+        // step 6-2
+        // remove the headers in indexes from the last(because splice chenges index)
+        // and change first header value
+        indexes.reverse().forEach(function (e, i) {
+            if (i === len - 1) {
+                // only replace first entry
+                _this.headerList[e].value = value;
+            }
+            else {
+                // remove duplicate from last
+                _this.headerList = _this.headerList.splice(e, 1);
+            }
+        });
     };
     return Headers;
+})();
+/////////////////////////////
+/// Headers Tests
+/////////////////////////////
+// tests
+function assert(actual, expected) {
+    console.log('.');
+    console.assert(actual === expected, '\nact: ' + actual + '\nexp: ' + expected);
+}
+(function () {
+    var header = new Header("key", "value");
+    assert(header.name, "key");
+    assert(header.value, "value");
+})();
+(function () {
+    var headers = new Headers();
+    assert(headers.append("key", "value"), undefined);
+    assert(headers.get("key"), "value");
+    assert(headers.has("key"), true);
+    assert(headers.has("k"), false);
+    assert(headers.append("key", "v2"), undefined);
+    var values = headers.getAll("key");
+    assert(values.length, 2);
+    assert(values[0], "value");
+    assert(values[1], "v2");
+})();
+(function () {
+    //var headers: Headers = new Headers();
+    //headers.set("key", "value1");
+    //assert(headers.get("key"), "value1");
+    //assert(headers.getAll("key").length, 1);
+    //headers.append("key", "value2");
+    //assert(headers.getAll("key").length, 2);
+    //headers.set("key", "vvvv");
+    //assert(headers.getAll("key").length, 1);
+    var headers = new Headers();
+    headers.append("k0", "v0");
+    headers.append("k1", "v1");
+    headers.append("k0", "v2");
+    headers.append("k3", "v3");
+    headers.append("k0", "v4");
+    headers.set("k0", "vvvv");
+    assert(headers.getAll("k0").length, 1);
+    assert(headers.get("k0"), "vvvv");
+})();
+(function () {
+    var headersInit = new Headers();
+    headersInit.append("key", "value");
 })();
 ;
 ;
