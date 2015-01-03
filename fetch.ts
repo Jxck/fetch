@@ -444,9 +444,16 @@ class Headers implements IHeaders{
 /////////////////////////////
 
 // tests
+interface Error {
+  stack: string;
+}
 function assert(actual, expected) {
+  function line() {
+    var err = new Error();
+    return err.stack.split('\n')[3].split(':').reverse()[1];
+  };
   console.log('.');
-  console.assert(actual === expected, '\nact: ' + actual + '\nexp: ' + expected);
+  console.assert(actual === expected, line() + '\nact: ' + actual + '\nexp: ' + expected);
 }
 
 (function() {
