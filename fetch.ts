@@ -186,6 +186,11 @@ function isSimpleHeader(name, value: ByteString): boolean {
   return false;
 }
 
+
+/////////////////////////////
+/// Headers
+/////////////////////////////
+
 // https://fetch.spec.whatwg.org/#headersinit
 // typedef (Headers or sequence<sequence<ByteString>> or OpenEndedDictionary<ByteString>) HeadersInit;
 type HeadersInit = Headers | ByteString[][] | OpenEndedDictionary;
@@ -429,10 +434,10 @@ type BodyInit = Blob | BufferSource | FormData | URLSearchParams | USVString
 // https://fetch.spec.whatwg.org/#body
 interface IBody {
   // readonly property
-  bodyUsed: boolean;
-  body:     Body;
-  usedFlag: boolean;
-  mimeType: string;
+  bodyUsed:      boolean;
+  body:          Body;
+  usedFlag:      boolean;
+  mimeType:      string;
 
   // method
   arrayBuffer(): Promise<ArrayBuffer>;
