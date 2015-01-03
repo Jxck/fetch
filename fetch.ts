@@ -455,13 +455,27 @@ function assert(actual, expected) {
   console.assert(actual === expected, line() + '\nact: ' + actual + '\nexp: ' + expected);
 }
 
-(function() {
+function test(name: string, fn: any): any {
+  var tests = [];
+  tests.push(fn);
+  return function t(fn: any): any {
+    if (fn === undefined) {
+      console.log(name);
+      tests.forEach(function(fn) {
+        fn();
+      });
+      return
+    }
+    tests.push(fn);
+    return t;
+  };
+}
+
+test("Headers", function() {
   var header: Header = new Header("key", "value");
   assert(header.name,  "key");
   assert(header.value, "value");
-})();
-
-(function() {
+})(function() {
   var headers: Headers = new Headers();
   assert(headers.append("key", "value"), undefined);
   assert(headers.get("key"), "value");
@@ -473,9 +487,7 @@ function assert(actual, expected) {
   assert(values.length, 2);
   assert(values[0], "value");
   assert(values[1], "v2");
-})();
-
-(function() {
+})(function() {
   var headers: Headers = new Headers();
   headers.set("key", "value1");
   assert(headers.get("key"), "value1");
@@ -496,9 +508,7 @@ function assert(actual, expected) {
   headers.set("k0", "vvvv");
   assert(headers.getAll("k0").length, 1);
   assert(headers.get("k0"), "vvvv");
-})();
-
-(function() {
+})(function() {
   var headersInit: Headers = new Headers();
   headersInit.append("key", "value");
 })();

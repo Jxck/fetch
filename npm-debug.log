@@ -1,0 +1,35 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/yusuke/.nodebrew/node/v0.11.14/bin/node',
+1 verbose cli   '/Users/yusuke/.nodebrew/current/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'build' ]
+2 info using npm@2.0.0
+3 info using node@v0.11.14
+4 verbose run-script [ 'prebuild', 'build', 'postbuild' ]
+5 info prebuild fetch@1.0.0
+6 info build fetch@1.0.0
+7 verbose unsafe-perm in lifecycle true
+8 info fetch@1.0.0 Failed to exec build script
+9 verbose stack Error: Exit status 2
+9 verbose stack     at ChildProcess.<anonymous> (/Users/yusuke/.nodebrew/node/v0.11.14/lib/node_modules/npm/lib/utils/lifecycle.js:212:16)
+9 verbose stack     at ChildProcess.emit (events.js:110:17)
+9 verbose stack     at maybeClose (child_process.js:1000:16)
+9 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:1072:5)
+10 verbose pkgid fetch@1.0.0
+11 verbose cwd /Users/yusuke/develop/jxck/fetch
+12 error Darwin 13.4.0
+13 error argv "/Users/yusuke/.nodebrew/node/v0.11.14/bin/node" "/Users/yusuke/.nodebrew/current/bin/npm" "run" "build"
+14 error node v0.11.14
+15 error npm  v2.0.0
+16 error code ELIFECYCLE
+17 error fetch@1.0.0 build: `tsc fetch.ts --target ES5`
+17 error Exit status 2
+18 error Failed at the fetch@1.0.0 build script.
+18 error This is most likely a problem with the fetch package,
+18 error not with npm itself.
+18 error Tell the author that this fails on your system:
+18 error     tsc fetch.ts --target ES5
+18 error You can get their info via:
+18 error     npm owner ls fetch
+18 error There is likely additional logging output above.
+19 verbose exit [ 1, true ]
