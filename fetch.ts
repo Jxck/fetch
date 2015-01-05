@@ -1,5 +1,41 @@
 /// <reference path="es6-promise.d.ts" />
 
+/////////////// for TESTING ///////////////
+// tests
+interface Error {
+  stack: string;
+}
+
+function assert(actual, expected) {
+  function line() {
+    var err = new Error();
+    return err.stack.split('\n')[3].split(':').reverse()[1];
+  };
+  console.log('.');
+  console.assert(actual === expected, line() + '\nact: ' + actual + '\nexp: ' + expected);
+}
+
+function fail() {
+  throw new Error("assertion error");
+}
+
+function test(name: string, fn: any): any {
+  var tests = [];
+  tests.push(fn);
+  return function t(fn: any): any {
+    if (fn === undefined) {
+      console.log(name);
+      tests.forEach(function(fn) {
+        fn();
+      });
+      return
+    }
+    tests.push(fn);
+    return t;
+  };
+}
+/////////////// for TESTING ///////////////
+
 // http://heycam.github.io/webidl/#idl-ByteString
 type ByteString = string;
 
@@ -445,39 +481,6 @@ class Headers implements IHeaders{
 /////////////////////////////
 /// Headers Tests
 /////////////////////////////
-
-// tests
-interface Error {
-  stack: string;
-}
-function assert(actual, expected) {
-  function line() {
-    var err = new Error();
-    return err.stack.split('\n')[3].split(':').reverse()[1];
-  };
-  console.log('.');
-  console.assert(actual === expected, line() + '\nact: ' + actual + '\nexp: ' + expected);
-}
-
-function fail() {
-  throw new Error("assertion error");
-}
-
-function test(name: string, fn: any): any {
-  var tests = [];
-  tests.push(fn);
-  return function t(fn: any): any {
-    if (fn === undefined) {
-      console.log(name);
-      tests.forEach(function(fn) {
-        fn();
-      });
-      return
-    }
-    tests.push(fn);
-    return t;
-  };
-}
 
 test("Headers", function() {
   // init wit Headers
