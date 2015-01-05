@@ -1,41 +1,5 @@
 /// <reference path="es6-promise.d.ts" />
 
-/////////////// for TESTING ///////////////
-// tests
-interface Error {
-  stack: string;
-}
-
-function assert(actual, expected) {
-  function line() {
-    var err = new Error();
-    return err.stack.split('\n')[3].split(':').reverse()[1];
-  };
-  console.log('.');
-  console.assert(actual === expected, line() + '\nact: ' + actual + '\nexp: ' + expected);
-}
-
-function fail() {
-  throw new Error("assertion error");
-}
-
-function test(name: string, fn: any): any {
-  var tests = [];
-  tests.push(fn);
-  return function t(fn: any): any {
-    if (fn === undefined) {
-      console.log(name);
-      tests.forEach(function(fn) {
-        fn();
-      });
-      return
-    }
-    tests.push(fn);
-    return t;
-  };
-}
-/////////////// for TESTING ///////////////
-
 // http://heycam.github.io/webidl/#idl-ByteString
 type ByteString = string;
 
@@ -478,88 +442,10 @@ class Headers implements IHeaders{
   }
 }
 
+
 /////////////////////////////
-/// Headers Tests
+/// Body
 /////////////////////////////
-
-test("Headers", function() {
-  // init wit Headers
-  var headersInit: Headers = new Headers();
-  headersInit.append("key", "value");
-
-  var headers: Headers = new Headers(headersInit);
-  assert(headers.get("key"), "value");
-})(function() {
-  // init with ByteString[][]
-  var headersInit: ByteString[][] = [["k1", "v1"], ["k2", "v2"]];
-
-  var headers: Headers = new Headers(headersInit);
-  assert(headers.get("k1"), "v1");
-  assert(headers.get("k2"), "v2");
-
-  try {
-    var headers: Headers = new Headers([["key"]]);
-    fail();
-  } catch (err) {
-    assert(err.name, "TypeError");
-  }
-
-  try {
-    var headers: Headers = new Headers([["key", "value", "zzz"]]);
-    fail();
-  } catch (err) {
-    assert(err.name, "TypeError");
-  }
-})(function() {
-  // init with OpenEndedDictionary
-  var headersInit: OpenEndedDictionary = { "k1": "v1", "k2": "v2" };
-
-  var headers: Headers = new Headers(headersInit);
-  assert(headers.get("k1"), "v1");
-  assert(headers.get("k2"), "v2");
-  var header: Header = new Header("key", "value");
-  assert(header.name,  "key");
-  assert(header.value, "value");
-})(function() {
-  // API
-  var headers: Headers = new Headers();
-  assert(headers.append("key", "value"), undefined);
-  assert(headers.get("key"), "value");
-  assert(headers.has("key"), true);
-  assert(headers.has("k"), false);
-  assert(headers.append("key", "v2"), undefined);
-
-  var values = headers.getAll("key");
-  assert(values.length, 2);
-  assert(values[0], "value");
-  assert(values[1], "v2");
-
-  headers.delete("key");
-  assert(headers.getAll("key").length, 0);
-})(function() {
-  // set
-  var headers: Headers = new Headers();
-  headers.set("key", "value1");
-  assert(headers.get("key"), "value1");
-  assert(headers.getAll("key").length, 1);
-
-  headers.append("key", "value2");
-  assert(headers.getAll("key").length, 2);
-  headers.set("key", "vvvv");
-  assert(headers.getAll("key").length, 1);
-
-  var headers: Headers = new Headers();
-  headers.append("k0", "v0");
-  headers.append("k1", "v1");
-  headers.append("k0", "v2");
-  headers.append("k3", "v3");
-  headers.append("k0", "v4");
-
-  headers.set("k0", "vvvv");
-  assert(headers.getAll("k0").length, 1);
-  assert(headers.get("k0"), "vvvv");
-})();
-
 
 // https://fetch.spec.whatwg.org/#json
 type object = JSON;
@@ -953,3 +839,124 @@ this.fetch = function(input: RequestInfo, init?: RequestInit): Promise<Response>
 }
 
 // WorkerGlobalScope implements GlobalFetch;
+
+
+
+
+/////////////// for TESTING ///////////////
+// tests
+interface Error {
+  stack: string;
+}
+
+function assert(actual, expected) {
+  function line() {
+    var err = new Error();
+    return err.stack.split('\n')[3].split(':').reverse()[1];
+  };
+  console.log('.');
+  console.assert(actual === expected, line() + '\nact: ' + actual + '\nexp: ' + expected);
+}
+
+function fail() {
+  throw new Error("assertion error");
+}
+
+function test(name: string, fn: any): any {
+  var tests = [];
+  tests.push(fn);
+  return function t(fn: any): any {
+    if (fn === undefined) {
+      console.log(name);
+      tests.forEach(function(fn) {
+        fn();
+      });
+      return
+    }
+    tests.push(fn);
+    return t;
+  };
+}
+/////////////// for TESTING ///////////////
+
+
+/////////////////////////////
+/// Headers Tests
+/////////////////////////////
+test("Headers", function() {
+  // init wit Headers
+  var headersInit: Headers = new Headers();
+  headersInit.append("key", "value");
+
+  var headers: Headers = new Headers(headersInit);
+  assert(headers.get("key"), "value");
+})(function() {
+  // init with ByteString[][]
+  var headersInit: ByteString[][] = [["k1", "v1"], ["k2", "v2"]];
+
+  var headers: Headers = new Headers(headersInit);
+  assert(headers.get("k1"), "v1");
+  assert(headers.get("k2"), "v2");
+
+  try {
+    var headers: Headers = new Headers([["key"]]);
+    fail();
+  } catch (err) {
+    assert(err.name, "TypeError");
+  }
+
+  try {
+    var headers: Headers = new Headers([["key", "value", "zzz"]]);
+    fail();
+  } catch (err) {
+    assert(err.name, "TypeError");
+  }
+})(function() {
+  // init with OpenEndedDictionary
+  var headersInit: OpenEndedDictionary = { "k1": "v1", "k2": "v2" };
+
+  var headers: Headers = new Headers(headersInit);
+  assert(headers.get("k1"), "v1");
+  assert(headers.get("k2"), "v2");
+  var header: Header = new Header("key", "value");
+  assert(header.name,  "key");
+  assert(header.value, "value");
+})(function() {
+  // API
+  var headers: Headers = new Headers();
+  assert(headers.append("key", "value"), undefined);
+  assert(headers.get("key"), "value");
+  assert(headers.has("key"), true);
+  assert(headers.has("k"), false);
+  assert(headers.append("key", "v2"), undefined);
+
+  var values = headers.getAll("key");
+  assert(values.length, 2);
+  assert(values[0], "value");
+  assert(values[1], "v2");
+
+  headers.delete("key");
+  assert(headers.getAll("key").length, 0);
+})(function() {
+  // set
+  var headers: Headers = new Headers();
+  headers.set("key", "value1");
+  assert(headers.get("key"), "value1");
+  assert(headers.getAll("key").length, 1);
+
+  headers.append("key", "value2");
+  assert(headers.getAll("key").length, 2);
+  headers.set("key", "vvvv");
+  assert(headers.getAll("key").length, 1);
+
+  var headers: Headers = new Headers();
+  headers.append("k0", "v0");
+  headers.append("k1", "v1");
+  headers.append("k0", "v2");
+  headers.append("k3", "v3");
+  headers.append("k0", "v4");
+
+  headers.set("k0", "vvvv");
+  assert(headers.getAll("k0").length, 1);
+  assert(headers.get("k0"), "vvvv");
+})();
