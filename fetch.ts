@@ -247,7 +247,7 @@ class Headers implements IHeaders{
     if (Array.isArray(init)) {
       var headerSequence = <ByteString[][]> init;
       headerSequence.forEach((header) => {
-        if(header.length === 2) {
+        if(header.length !== 2) {
           throw new TypeError("init for Headers was incorrect BytesString Sequence");
         }
         this.append(header[0], header[1]);
@@ -459,6 +459,10 @@ function assert(actual, expected) {
   console.assert(actual === expected, line() + '\nact: ' + actual + '\nexp: ' + expected);
 }
 
+function fail() {
+  throw new Error("assertion error");
+}
+
 function test(name: string, fn: any): any {
   var tests = [];
   tests.push(fn);
@@ -517,7 +521,33 @@ test("Headers", function() {
   headersInit.append("key", "value");
 
   var headers: Headers = new Headers(headersInit);
-  console.log(headers);
+  assert(headers.get("key"), "value");
+})(function() {
+  var headersInit: ByteString[][] = [["k1", "v1"], ["k2", "v2"]];
+
+  var headers: Headers = new Headers(headersInit);
+  assert(headers.get("k1"), "v1");
+  assert(headers.get("k2"), "v2");
+
+  try {
+    var headers: Headers = new Headers([["key"]]);
+    fail();
+  } catch (err) {
+    assert(err.name, "TypeError");
+  }
+
+  try {
+    var headers: Headers = new Headers([["key", "value", "zzz"]]);
+    fail();
+  } catch (err) {
+    assert(err.name, "TypeError");
+  }
+})(function() {
+  var headersInit: OpenEndedDictionary = { "k1": "v1", "k2": "v2" };
+
+  var headers: Headers = new Headers(headersInit);
+  assert(headers.get("k1"), "v1");
+  assert(headers.get("k2"), "v2");
 })();
 
 
