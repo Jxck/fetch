@@ -468,6 +468,11 @@ interface IBody {
   text():        Promise<USVString>;
 };
 
+
+/////////////////////////////
+/// Request
+/////////////////////////////
+
 // https://fetch.spec.whatwg.org/#requestinfo
 type RequestInfo = Request | USVString;
 
