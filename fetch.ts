@@ -781,7 +781,7 @@ class Request implements IRequest {
 
       // step 21-3
       if (result.contentType !== null) {
-        var hasContentType = request.headerList.some(function(header) {
+        var hasContentType = request.headerList.some((header) => {
           return header.name === "Content-Type";
         });
 
@@ -832,7 +832,7 @@ interface Window {
 };
 
 this.fetch = function(input: RequestInfo, init?: RequestInit): Promise<Response> {
-  var p = new Promise<Response>(function(resolve, reject) {
+  var p = new Promise<Response>((resolve, reject) => {
     try {
       var r = (new Request(input, init)).request;
     } catch(e) {
@@ -873,7 +873,7 @@ function test(name: string, fn: any): any {
   return function t(fn: any): any {
     if (fn === undefined) {
       console.log(name);
-      tests.forEach(function(fn) {
+      tests.forEach((fn) => {
         fn();
       });
       return
@@ -888,14 +888,14 @@ function test(name: string, fn: any): any {
 /////////////////////////////
 /// Headers Tests
 /////////////////////////////
-test("Headers", function() {
+test("Headers", () => {
   // init wit Headers
   var headersInit: Headers = new Headers();
   headersInit.append("key", "value");
 
   var headers: Headers = new Headers(headersInit);
   assert(headers.get("key"), "value");
-})(function() {
+})(() => {
   // init with ByteString[][]
   var headersInit: ByteString[][] = [["k1", "v1"], ["k2", "v2"]];
 
@@ -916,7 +916,7 @@ test("Headers", function() {
   } catch (err) {
     assert(err.name, "TypeError");
   }
-})(function() {
+})(() => {
   // init with OpenEndedDictionary
   var headersInit: OpenEndedDictionary = { "k1": "v1", "k2": "v2" };
 
@@ -926,7 +926,7 @@ test("Headers", function() {
   var header: Header = new Header("key", "value");
   assert(header.name,  "key");
   assert(header.value, "value");
-})(function() {
+})(() => {
   // API
   var headers: Headers = new Headers();
   assert(headers.append("key", "value"), undefined);
@@ -942,7 +942,7 @@ test("Headers", function() {
 
   headers.delete("key");
   assert(headers.getAll("key").length, 0);
-})(function() {
+})(() => {
   // set
   var headers: Headers = new Headers();
   headers.set("key", "value1");
