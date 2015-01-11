@@ -955,6 +955,54 @@ class Response implements IResponse {
     r._response = new response();
     r._headers = new Headers();
 
+    if (init !== undefined) {
+      // step 4
+      r._response.status = init.status;
+      // step 5
+      r._response.statusMessage = init.statusText;
+    }
+
+    // step 6
+    if (init.headers) {
+      // step 6-1
+      r._response.headerList = [];
+
+      // step 6-2
+      // TODO: implements fill
+      // r._response.headerList =;
+    }
+
+    // step 7
+    if (body) {
+      // step 7-1
+      var extracted = extract(body);
+      var stream = extracted.stream;
+      var contentType = extracted.contentType;
+
+      // step 7-2
+      r._response.body = stream;
+
+      // step 7-3
+      if (contentType !== null) {
+        var hasContentType = r._response.headerList.some((header) => {
+          return header.name === "Content-Type";
+        });
+
+        if (!hasContentType) {
+          // TODO: append
+          // r._response.headerList.append(Header("Content-Type", contentType));
+        }
+      }
+
+      // step 8
+      // TODO: extracting MIME type
+
+      // step 9
+      // TODO: TLS state
+
+      // step 10
+      return r;
+    }
   }
 
   get type(): ResponseType {
