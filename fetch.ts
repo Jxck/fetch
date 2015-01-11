@@ -900,7 +900,7 @@ class ResponseInit {
   headers:    HeadersInit;
 };
 
-type response = {
+class response {
   type:              string;
   terminationReason: string;
   url:               string;
@@ -910,6 +910,18 @@ type response = {
   body:              Body;
   cacheState:        string;
   TLSState:          string;
+
+  constructor() {
+    this.type              = "default";
+    this.terminationReason = "timeout";
+    this.url               = null;
+    this.status            = 200;
+    this.statusMessage     = "OK";
+    this.headerList        = [];
+    this.body              = null;
+    this.cacheState        = "none";
+    this.TLSState          = "unauthenticated";
+  }
 }
 
 // https://fetch.spec.whatwg.org/#response
@@ -921,6 +933,8 @@ class Response implements IResponse {
   _statusText: ByteString;   // readonly
   _headers:    Headers;      // readonly
 
+  _response:   response;
+
   // https://fetch.spec.whatwg.org/#dom-response
   // [Constructor(optional BodyInit body, optional ResponseInit init), Exposed=(Window,Worker)]
   constructor(body?: BodyInit, init?: ResponseInit) {
@@ -931,14 +945,15 @@ class Response implements IResponse {
       }
 
       // step 2
-      if (ResponsePhrase.indexOf(init.statusText) < 0) {
+      if (ReasonPhrase.indexOf(init.statusText) < 0) {
         throw new TypeError("unknown status test");
       }
     }
 
     // step 3
     var r = this;
-    r.response =
+    r._response = new response();
+    r._headers = new Headers();
 
   }
 
