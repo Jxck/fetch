@@ -4,10 +4,12 @@
 type ByteString = string;
 
 // http://heycam.github.io/webidl/#common-BufferSource
-type BufferSource = Object;
+class BufferSource {
+}
 
 // https://url.spec.whatwg.org/#urlsearchparams
-type URLSearchParams = Object;
+class URLSearchParams {
+}
 
 // http://heycam.github.io/webidl/#idl-USVString
 type USVString = string;
@@ -797,9 +799,37 @@ class Request implements IRequest {
   }
 }
 
-// TODO: implement
-function extract(body: Body): any {
-  return null;
+// https://fetch.spec.whatwg.org/#concept-bodyinit-extract
+function extract(object: any): any {
+  // step 1
+  var stream = [];
+
+  // step 2
+  var contentType = null;
+
+  // step 3
+  switch(object.constructor) {
+    // Blob
+    case Blob:
+      stream = object.contents;
+
+      if (object.type) {
+        contentType = object.type;
+      }
+    case BufferSource:
+      // TODO: stream = copy(object);
+    case FormData:
+      // TODO:
+    case URLSearchParams:
+      stream = object.list.toString();
+      contentType = "application/x-www-form-urlencoded;charset=UTF-8";
+    case String: // USVString
+      // stream = encode(object);
+      contentType = "text/plain;charset=UTF-8";
+  }
+
+  // step 4
+  return { stream: stream, contentType: contentType };
 }
 
 
