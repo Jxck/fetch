@@ -836,7 +836,7 @@ function extract(object: any): any {
 
 // https://fetch.spec.whatwg.org/#response
 // [Constructor(optional BodyInit body, optional ResponseInit init), Exposed=(Window,Worker)]
-interface Response extends Body { // Response implements Body;
+interface IResponse extends Body { // Response implements Body;
   // static Response error();
   // static Response redirect(USVString url, optional unsigned short status = 302);
   type:       ResponseType;
@@ -858,11 +858,11 @@ class ResponseInit {
 // https://fetch.spec.whatwg.org/#globalfetch
 // Window implements GlobalFetch;
 interface Window {
-  fetch(input: RequestInfo, init?: RequestInit): Promise<Response>;
+  fetch(input: RequestInfo, init?: RequestInit): Promise<IResponse>;
 };
 
-this.fetch = function(input: RequestInfo, init?: RequestInit): Promise<Response> {
-  var p = new Promise<Response>((resolve, reject) => {
+this.fetch = function(input: RequestInfo, init?: RequestInit): Promise<IResponse> {
+  var p = new Promise<IResponse>((resolve, reject) => {
     try {
       var r = (new Request(input, init)).request;
     } catch(e) {
