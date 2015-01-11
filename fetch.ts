@@ -835,15 +835,15 @@ function extract(object: any): any {
 
 
 // https://fetch.spec.whatwg.org/#response
-// [Constructor(optional BodyInit body, optional ResponseInit init), Exposed=(Window,Worker)]
 interface IResponse extends Body { // Response implements Body;
   // static Response error();
   // static Response redirect(USVString url, optional unsigned short status = 302);
-  type:       ResponseType;
-  url:        USVString;
-  status:     number;
-  statusText: ByteString;
-  headers:    Headers;
+
+  type:       ResponseType; // readonly
+  url:        USVString;    // readonly
+  status:     number;       // readonly
+  statusText: ByteString;   // readonly
+  headers:    Headers;      // readonly
   // Response clone();
 };
 
@@ -853,6 +853,43 @@ class ResponseInit {
   statusText: ByteString  = "OK";
   headers:    HeadersInit;
 };
+
+// https://fetch.spec.whatwg.org/#response
+class Response implements IResponse {
+
+  _type:       ResponseType; // readonly
+  _url:        USVString;    // readonly
+  _status:     number;       // readonly
+  _statusText: ByteString;   // readonly
+  _headers:    Headers;      // readonly
+
+  // https://fetch.spec.whatwg.org/#dom-response
+  // [Constructor(optional BodyInit body, optional ResponseInit init), Exposed=(Window,Worker)]
+  constructor(body?: BodyInit, init?: ResponseInit) {
+  }
+
+  get type(): ResponseType {
+    return this._type;
+  }
+
+  get url(): USVString {
+    return this._url;
+  }
+
+  get status(): number {
+    return this._status;
+  }
+
+  get statusText(): ByteString {
+    return this._statusText;
+  }
+
+  get headers(): Headers {
+    return this._headers;
+  }
+
+
+}
 
 
 // https://fetch.spec.whatwg.org/#globalfetch
