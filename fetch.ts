@@ -900,6 +900,18 @@ class ResponseInit {
   headers:    HeadersInit;
 };
 
+type response = {
+  type:              string;
+  terminationReason: string;
+  url:               string;
+  status:            number;
+  statusMessage:     string;
+  headerList:        Header[];
+  body:              Body;
+  cacheState:        string;
+  TLSState:          string;
+}
+
 // https://fetch.spec.whatwg.org/#response
 class Response implements IResponse {
 
@@ -912,6 +924,22 @@ class Response implements IResponse {
   // https://fetch.spec.whatwg.org/#dom-response
   // [Constructor(optional BodyInit body, optional ResponseInit init), Exposed=(Window,Worker)]
   constructor(body?: BodyInit, init?: ResponseInit) {
+    if (init !== undefined) {
+      // step 1
+      if (init.status < 200 && init.status > 599) {
+        throw new RangeError("status is not in the range 200 to 599");
+      }
+
+      // step 2
+      if (ResponsePhrase.indexOf(init.statusText) < 0) {
+        throw new TypeError("unknown status test");
+      }
+    }
+
+    // step 3
+    var r = this;
+    r.response =
+
   }
 
   get type(): ResponseType {
