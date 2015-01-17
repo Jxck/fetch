@@ -1,6 +1,6 @@
 /// <reference path="es6-promise.d.ts" />
 /// <reference path="webidl.d.ts" />
-/// <reference path="header.ts" />
+/// <reference path="headers.ts" />
 
 // http://heycam.github.io/webidl/#common-BufferSource
 class BufferSource {
