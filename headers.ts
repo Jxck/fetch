@@ -78,6 +78,7 @@ function isSimpleHeader(name, value: ByteString): boolean {
   }
 
   if (name === "Content-Type") {
+    // TODO: parse value https://fetch.spec.whatwg.org/#concept-header-parse
     if (SimpleHeaderValue[value] !== undefined) {
       return true;
     }
@@ -150,6 +151,7 @@ class Headers implements IHeaders{
     return headers;
   }
 
+  // https://fetch.spec.whatwg.org/#concept-headers-fill
   private fill(headers: Headers, object: HeadersInit) {
     // step 1 Headers
     if (object instanceof Headers) {
@@ -182,8 +184,10 @@ class Headers implements IHeaders{
 
   // https://fetch.spec.whatwg.org/#dom-headers-append
   append(name, value: ByteString): void {
+    // https://fetch.spec.whatwg.org/#concept-headers-append
     // step 1
     if (!name || !value) {
+      // TODO name/value validation
       throw new TypeError("invalid name/value");
     }
 
