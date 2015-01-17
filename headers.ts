@@ -175,7 +175,7 @@ class Headers implements IHeaders{
     // step 3 OpenEndedDictionary
     if (typeof object === "object") {
       Object.keys(object).forEach((key) => {
-        this.append(key.toString(), object[key]);
+        headers.append(key.toString(), object[key]);
       });
     }
   }
