@@ -127,40 +127,55 @@ var Guard = {
   "none":            "none",
 }
 
+function copy<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 // https://fetch.spec.whatwg.org/#headers
 class Headers implements IHeaders{
   public headerList: Header[] = [];
   public guard: string = Guard.none;
 
   // https://fetch.spec.whatwg.org/#dom-headers
-  // https://fetch.spec.whatwg.org/#concept-headers-fill
   constructor(init?: HeadersInit) {
+    // step 1
+    var headers = this; // new Headers object
 
+    // step 2
+    if (init !== undefined) {
+      this.fill(headers, init);
+    }
+
+    // step 3
+    return headers;
+  }
+
+  private fill(headers: Headers, object: HeadersInit) {
     // step 1 Headers
-    if (init instanceof Headers) {
-      var headerListCopy = init.headerList;
-      headerListCopy.forEach((header) => {
-        this.append(header.name, header.value);
+    if (object instanceof Headers) {
+      var headerListCopy: Header[] = copy(object.headerList);
+      headerListCopy.forEach((header: Header) => {
+        headers.append(header.name, header.value);
       });
       return;
     }
 
     // step 2 ByteString[][]
-    if (Array.isArray(init)) {
-      var headerSequence = <ByteString[][]> init;
+    if (Array.isArray(object)) {
+      var headerSequence = <ByteString[][]> object;
       headerSequence.forEach((header) => {
         if(header.length !== 2) {
           throw new TypeError("init for Headers was incorrect BytesString Sequence");
         }
-        this.append(header[0], header[1]);
+        headers.append(header[0], header[1]);
       });
       return;
     }
 
     // step 3 OpenEndedDictionary
-    if (init) {
-      Object.keys(init).forEach((key) => {
-        this.append(key, init[key]);
+    if (typeof object === "object") {
+      Object.keys(object).forEach((key) => {
+        this.append(key.toString(), object[key]);
       });
     }
   }
