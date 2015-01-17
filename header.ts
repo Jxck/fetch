@@ -1,14 +1,6 @@
 /// <reference path="es6-promise.d.ts" />
 /// <reference path="webidl.d.ts" />
 
-// http://heycam.github.io/webidl/#common-BufferSource
-class BufferSource {
-}
-
-// https://url.spec.whatwg.org/#urlsearchparams
-class URLSearchParams {
-}
-
 // https://fetch.spec.whatwg.org/#forbidden-header-name
 enum ForbiddenHeaderNameEnum {
   "Accept-Charset",

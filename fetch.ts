@@ -1,5 +1,14 @@
 /// <reference path="es6-promise.d.ts" />
 /// <reference path="webidl.d.ts" />
+/// <reference path="header.ts" />
+
+// http://heycam.github.io/webidl/#common-BufferSource
+class BufferSource {
+}
+
+// https://url.spec.whatwg.org/#urlsearchparams
+class URLSearchParams {
+}
 
 // https://fetch.spec.whatwg.org/#concept-method
 enum MethodEnum {
@@ -107,8 +116,6 @@ enum ResponseTypeEnum {
   "error",
   "opaque"
 };
-
-
 
 /////////////////////////////
 /// Body
@@ -661,22 +668,6 @@ this.fetch = function(input: RequestInfo, init?: RequestInit): Promise<IResponse
     try {
       // step 2
       var r = (new Request(input, init)).request;
-
-      // step 3
-      var response = _fetch(r);
-
-      if (response.type === "error") {
-        // step 3-1
-        reject(new TypeError("error response type"));
-      } else {
-        // step 3-2
-        var res = new Response();
-        res.response = response;
-        resolve(res);
-      }
-      //TODO: process response body
-
-      //TODO: process response end-of-file
     } catch(e) {
       reject(e);
     }
