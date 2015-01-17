@@ -1,7 +1,5 @@
 /// <reference path="es6-promise.d.ts" />
-
-// http://heycam.github.io/webidl/#idl-ByteString
-type ByteString = string;
+/// <reference path="webidl.d.ts" />
 
 // http://heycam.github.io/webidl/#common-BufferSource
 class BufferSource {
@@ -10,15 +8,6 @@ class BufferSource {
 // https://url.spec.whatwg.org/#urlsearchparams
 class URLSearchParams {
 }
-
-// http://heycam.github.io/webidl/#idl-USVString
-type USVString = string;
-
-// http://heycam.github.io/webidl/#idl-DOMString
-type DOMString = string;
-
-// see: https://fetch.spec.whatwg.org/#headersinit
-type OpenEndedDictionary = Object;
 
 // https://fetch.spec.whatwg.org/#concept-method
 enum MethodEnum {
