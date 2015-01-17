@@ -1036,14 +1036,33 @@ interface Window {
 };
 
 this.fetch = function(input: RequestInfo, init?: RequestInit): Promise<IResponse> {
+  // step 1
   var p = new Promise<IResponse>((resolve, reject) => {
     try {
+      // step 2
       var r = (new Request(input, init)).request;
+
+      // step 3
+      var response = _fetch(r);
+
+      if (response.type === "error") {
+        // step 3-1
+        reject(new TypeError("error response type"));
+      } else {
+        // step 3-2
+        var res = new Response();
+        res.response = response;
+        resolve(res);
+      }
+      //TODO: process response body
+
+      //TODO: process response end-of-file
     } catch(e) {
       reject(e);
     }
   });
 
+  // step 4
   return p
 }
 
