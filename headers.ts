@@ -36,6 +36,16 @@ function isForbiddenHeaderName(name: ByteString): boolean {
   return false;
 }
 
+test("forbidden header", () => {
+  assert(isForbiddenHeaderName("Via"), true);
+  assert(isForbiddenHeaderName("Proxy-Foo"), true);
+  assert(isForbiddenHeaderName("Proxy-"), true);
+  assert(isForbiddenHeaderName("Sec-Bar"), true);
+  assert(isForbiddenHeaderName("Sec-"), true);
+
+  assert(isForbiddenHeaderName("Set-Cookie"), false);
+})();
+
 // https://fetch.spec.whatwg.org/#forbidden-response-header-name
 var ForbiddenResponseHeaderName = {
   "Set-Cookie": "Set-Cookie",
@@ -44,6 +54,12 @@ var ForbiddenResponseHeaderName = {
 function isForbiddenResponseHeaderName(name: ByteString): boolean {
   return ForbiddenResponseHeaderName[name] !== undefined;
 }
+
+test("forbidden response header", () => {
+  assert(isForbiddenResponseHeaderName("Set-Cookie"), true);
+  assert(isForbiddenResponseHeaderName("Set-Cookie2"), true);
+  assert(isForbiddenResponseHeaderName("Set-Cookie3"), false);
+})();
 
 // https://fetch.spec.whatwg.org/#simple-header
 var SimpleHeaderName = {
@@ -57,7 +73,7 @@ var SimpleHeaderValue = {
   "text/plain":                        "text/plain"
 }
 function isSimpleHeader(name, value: ByteString): boolean {
-  if (ForbiddenHeaderName[name] !== undefined) {
+  if (SimpleHeaderName[name] !== undefined) {
     return true;
   }
 
@@ -69,6 +85,13 @@ function isSimpleHeader(name, value: ByteString): boolean {
 
   return false;
 }
+
+test("simple header", () => {
+  assert(isSimpleHeader("Accept", "Foo"), true);
+  assert(isSimpleHeader("Set-Cookie", "Foo"), false);
+  assert(isSimpleHeader("Content-Type", "text/plain"), true);
+  assert(isSimpleHeader("Content-Type", "application/json"), false);
+})();
 
 // https://fetch.spec.whatwg.org/#headersinit
 // typedef (Headers or sequence<sequence<ByteString>> or OpenEndedDictionary<ByteString>) HeadersInit;
