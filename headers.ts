@@ -82,24 +82,24 @@ class Header {
   name:  ByteString;
   value: ByteString;
   constructor(name, value: ByteString) {
+    // TODO: validation
     this.name  = name;
     this.value = value;
   }
 }
 
-type Guard = string;
-enum GuardEnum {
-  "immutable",
-  "request",
-  "request-no-CORS",
-  "response",
-  "none",
+var Guard = {
+  "immutable":       "immutable",
+  "request":         "request",
+  "request-no-CORS": "request-no-CORS",
+  "response":        "response",
+  "none":            "none",
 }
 
 // https://fetch.spec.whatwg.org/#headers
 class Headers implements IHeaders{
   public headerList: Header[] = [];
-  public guard: Guard = GuardEnum[GuardEnum.none];
+  public guard: string = Guard.none;
 
   // https://fetch.spec.whatwg.org/#dom-headers
   // https://fetch.spec.whatwg.org/#concept-headers-fill
@@ -143,17 +143,17 @@ class Headers implements IHeaders{
 
     // step 2, 3, 4, 5
     switch(this.guard) {
-      case GuardEnum[GuardEnum.immutable]:
+      case Guard.immutable:
         throw new TypeError("operation to immutable headers");
-      case GuardEnum[GuardEnum.request]:
+      case Guard.request:
         if (isForbiddenHeaderName(name)) {
           return;
         }
-      case GuardEnum[GuardEnum["request-no-CORS"]]:
+      case Guard["request-no-CORS"]:
         if (!isSimpleHeader(name, value)) {
           return;
         }
-      case GuardEnum[GuardEnum.response]:
+      case Guard.response:
         if (isForbiddenResponseHeaderName(name)) {
           return;
         }
@@ -173,17 +173,17 @@ class Headers implements IHeaders{
 
     // step 2, 3, 4, 5
     switch(this.guard) {
-      case GuardEnum[GuardEnum.immutable]:
+      case Guard.immutable:
         throw new TypeError("operation to immutable headers");
-      case GuardEnum[GuardEnum.request]:
+      case Guard.request:
         if (isForbiddenHeaderName(name)) {
           return;
         }
-      case GuardEnum[GuardEnum["request-no-CORS"]]:
+      case Guard["request-no-CORS"]:
         if (!isSimpleHeader(name, "invalid")) {
           return;
         }
-      case GuardEnum[GuardEnum.response]:
+      case Guard.response:
         if (isForbiddenResponseHeaderName(name)) {
           return;
         }
@@ -255,20 +255,20 @@ class Headers implements IHeaders{
 
     switch(this.guard) {
       // step 2
-      case GuardEnum[GuardEnum.immutable]:
+      case Guard.immutable:
         throw new TypeError("operation to immutable headers");
       // step 3
-      case GuardEnum[GuardEnum.request]:
+      case Guard.request:
         if (isForbiddenHeaderName(name)) {
           return;
         }
       // step 4
-      case GuardEnum[GuardEnum["request-no-CORS"]]:
+      case Guard["request-no-CORS"]:
         if (!isSimpleHeader(name, "invalid")) {
           return;
         }
       // step 5
-      case GuardEnum[GuardEnum.response]:
+      case Guard.response:
         if (isForbiddenResponseHeaderName(name)) {
           return;
         }
