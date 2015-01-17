@@ -1,34 +1,31 @@
-/// <reference path="es6-promise.d.ts" />
 /// <reference path="webidl.d.ts" />
 
 // https://fetch.spec.whatwg.org/#forbidden-header-name
-enum ForbiddenHeaderNameEnum {
-  "Accept-Charset",
-  "Accept-Encoding",
-  "Access-Control-Request-Headers",
-  "Access-Control-Request-Method",
-  "Connection",
-  "Content-Length",
-  "Cookie",
-  "Cookie2",
-  "Date",
-  "DNT",
-  "Expect",
-  "Host",
-  "Keep-Alive",
-  "Origin",
-  "Referer",
-  "TE",
-  "Trailer",
-  "Transfer-Encoding",
-  "Upgrade",
-  "User-Agent",
-  "Via"
+var ForbiddenHeaderName = {
+  "Accept-Charset":     "Accept-Charset",
+  "Accept-Encoding":    "Accept-Encoding",
+  "Access-Control-Request-Headers":  "Access-Control-Request-Headers",
+  "Access-Control-Request-Method":   "Access-Control-Request-Method",
+  "Connection":         "Connection",
+  "Content-Length":     "Content-Length",
+  "Cookie":             "Cookie",
+  "Cookie2":            "Cookie2",
+  "Date":               "Date",
+  "DNT":                "DNT",
+  "Expect":             "Expect",
+  "Host":               "Host",
+  "Keep-Alive":         "Keep-Alive",
+  "Origin":             "Origin",
+  "Referer":            "Referer",
+  "TE":                 "TE",
+  "Trailer":            "Trailer",
+  "Transfer-Encoding":  "Transfer-Encoding",
+  "Upgrade":            "Upgrade",
+  "User-Agent":         "User-Agent",
+  "Via":                "Via"
 };
-
-// https://fetch.spec.whatwg.org/#forbidden-header-name
 function isForbiddenHeaderName(name: ByteString): boolean {
-  if (ForbiddenHeaderNameEnum[name] !== undefined) {
+  if (ForbiddenHeaderName[name] !== undefined) {
     return true;
   }
   var reg = /^(Proxy\-|Sec\-)/
@@ -40,21 +37,32 @@ function isForbiddenHeaderName(name: ByteString): boolean {
 }
 
 // https://fetch.spec.whatwg.org/#forbidden-response-header-name
+var ForbiddenResponseHeaderName = {
+  "Set-Cookie": "Set-Cookie",
+  "Set-Cookie2": "Set-Cookie2"
+}
 function isForbiddenResponseHeaderName(name: ByteString): boolean {
-  if (["Set-Cookie", "Set-Cookie2"].indexOf(name)) {
-    return true;
-  }
-  return false;
+  return ForbiddenResponseHeaderName[name] !== undefined;
 }
 
 // https://fetch.spec.whatwg.org/#simple-header
+var SimpleHeaderName = {
+  "Accept":           "Accept",
+  "Accept-Language":  "Accept-Language",
+  "Content-Language": "Content-Language"
+}
+var SimpleHeaderValue = {
+  "application/x-www-form-urlencoded": "application/x-www-form-urlencoded",
+  "multipart/form-data":               "multipart/form-data",
+  "text/plain":                        "text/plain"
+}
 function isSimpleHeader(name, value: ByteString): boolean {
-  if (["Accept", "Accept-Language", "Content-Language"].indexOf(name)) {
+  if (ForbiddenHeaderName[name] !== undefined) {
     return true;
   }
 
   if (name === "Content-Type") {
-    if (["application/x-www-form-urlencoded", "multipart/form-data", "text/plain"].indexOf(value)) {
+    if (SimpleHeaderValue[value] !== undefined) {
       return true;
     }
   }
