@@ -18,7 +18,10 @@
   },
   "main": "fetch.ts",
   "scripts": {
-    "build": "tsc fetch.ts --target ES5",
+    "build": "$(npm bin)/tsc fetch.ts --target ES5",
     "test": "npm run build && node fetch.js"
+  },
+  "devDependencies": {
+    "typescript": "^1.4.1"
   }
 }
