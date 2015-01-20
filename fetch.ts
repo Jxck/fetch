@@ -1,6 +1,7 @@
 /// <reference path="es6-promise.d.ts" />
 /// <reference path="webidl.d.ts" />
 /// <reference path="headers.ts" />
+/// <reference path="body.ts" />
 
 // http://heycam.github.io/webidl/#common-BufferSource
 class BufferSource {
@@ -116,32 +117,6 @@ enum ResponseTypeEnum {
   "error",
   "opaque"
 };
-
-/////////////////////////////
-/// Body
-/////////////////////////////
-
-// https://fetch.spec.whatwg.org/#json
-type object = JSON;
-// https://fetch.spec.whatwg.org/#bodyinit
-type BodyInit = Blob | BufferSource | FormData | URLSearchParams | USVString
-
-// https://fetch.spec.whatwg.org/#body
-interface IBody {
-  // readonly property
-  bodyUsed:      boolean;
-  body:          Body;
-  usedFlag:      boolean;
-  mimeType:      string;
-
-  // method
-  arrayBuffer(): Promise<ArrayBuffer>;
-  blob():        Promise<Blob>;
-  formData():    Promise<FormData>;
-  json():        Promise<JSON>;
-  text():        Promise<USVString>;
-};
-
 
 /////////////////////////////
 /// Request
