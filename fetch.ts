@@ -152,7 +152,6 @@ interface RequestInit {
   cache:       RequestCache;
 };
 
-type Body = Object;
 type Client = Object;
 type Referrer = Object;
 type Context = Object;
@@ -162,7 +161,7 @@ type request = {
   url:                   string;
   headerList:            Header[];
   unsafeRequestFlag:     boolean;
-  body:                  Body;
+  body:                  body;
   //TODO: client:        Client;
   context:               Context;
   //TODO: origin:        string;
@@ -230,7 +229,7 @@ class Request implements IRequest {
 
   // https://fetch.spec.whatwg.org/#dom-body-bodyused
   get bodyUsed(): boolean {
-    return this.bodyUsed;
+    return this._bodyUsed;
   }
 
   // https://fetch.spec.whatwg.org/#dom-request-clone
@@ -267,7 +266,7 @@ class Request implements IRequest {
 
   // Request
   public request:  request;
-  public body:     Body;
+  public body:     body;
   public usedFlag: boolean;
   public mimeType: string;
 
@@ -482,7 +481,7 @@ function extract(object: any): any {
 
 
 // https://fetch.spec.whatwg.org/#response
-interface IResponse extends Body { // Response implements Body;
+interface IResponse extends IBody { // Response implements Body;
   // static Response error();
   // static Response redirect(USVString url, optional unsigned short status = 302);
 
@@ -527,6 +526,8 @@ class response {
 
 // https://fetch.spec.whatwg.org/#response
 class Response implements IResponse {
+  // implements body
+  _bodyUsed: boolean;
 
   _type:       ResponseType; // readonly
   _url:        USVString;    // readonly
@@ -606,6 +607,10 @@ class Response implements IResponse {
     }
   }
 
+  get bodyUsed(): boolean {
+    return this._bodyUsed;
+  }
+
   get type(): ResponseType {
     return this._type;
   }
@@ -626,7 +631,25 @@ class Response implements IResponse {
     return this._headers;
   }
 
+  arrayBuffer(): Promise<ArrayBuffer> {
+    return null;
+  }
 
+  blob(): Promise<Blob> {
+    return null;
+  }
+
+  formData(): Promise<FormData> {
+    return null;
+  }
+
+  json(): Promise<JSON> {
+    return null;
+  }
+
+  text(): Promise<USVString> {
+    return null;
+  }
 }
 
 

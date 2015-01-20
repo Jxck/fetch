@@ -1,6 +1,8 @@
 // https://fetch.spec.whatwg.org/#json
 type object = JSON;
 
+type body = Object; // byte stream
+
 // https://fetch.spec.whatwg.org/#bodyinit
 type BodyInit = Blob | BufferSource | FormData | URLSearchParams | USVString
 
@@ -8,9 +10,6 @@ type BodyInit = Blob | BufferSource | FormData | URLSearchParams | USVString
 interface IBody {
   // readonly property
   bodyUsed:      boolean;
-  body:          Body;
-  usedFlag:      boolean;
-  mimeType:      string;
 
   // method
   arrayBuffer(): Promise<ArrayBuffer>;
@@ -21,9 +20,9 @@ interface IBody {
 };
 
 // https://fetch.spec.whatwg.org/#body
-class _Body implements IBody { // TODO: buplicate
+class Body implements IBody {
   private _bodyUsed: boolean;
-  private _body:     Body;
+  private _body:     body;
   private _usedFlag: boolean;
   private _mimeType: string;
 
@@ -31,7 +30,7 @@ class _Body implements IBody { // TODO: buplicate
     return this._bodyUsed;
   }
 
-  get body(): Body {
+  get body(): body {
     return this._body;
   }
 
