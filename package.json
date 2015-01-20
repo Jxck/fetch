@@ -18,6 +18,7 @@
   },
   "main": "fetch.ts",
   "scripts": {
+    "clean": "rm *.js",
     "build": "tsc fetch.ts --target ES5",
     "test": "npm run build && node fetch.js"
   },
