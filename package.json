@@ -1,8 +1,8 @@
 {
-  "name": "fetch",
+  "name": "fetch-standard",
   "author": "Jxck",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "implementaion of https://fetch.spec.whatwg.org/",
   "homepage": "https://github.com/Jxck/fetch",
   "bugs": {
