@@ -6,7 +6,7 @@ WIP
 
 ## motivation
 
-implementation of [https://fetch.spec.whatwg.org/](fetch API) in pure javascript.
+implementation of [fetch API](https://fetch.spec.whatwg.org/) in pure javascript.
 polyfill for browser, and implemnt for node.js.
 make network http access isomorphic.
 
